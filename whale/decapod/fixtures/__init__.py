@@ -1,9 +1,7 @@
 """
 ---------------
-Shrimp conftest
+Shrimp fixtures
 ---------------
-
-Contains fixtures specific for shrimp.
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,5 +17,22 @@ Contains fixtures specific for shrimp.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .fixtures import *  # noqa
-from .fixtures import __all__  # noqa
+
+from .roles import *  # noqa
+from .decapod import *  # noqa
+from .users import *  # noqa
+
+__all__ = sorted([  # sort for documentation
+    'get_decapod_client',
+    'decapod_client',
+
+    'get_role_steps',
+    'role_steps',
+    'create_role',
+    'role',
+
+    'get_user_steps',
+    'user_steps',
+    'create_user',
+    'user',
+])

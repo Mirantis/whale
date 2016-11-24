@@ -10,6 +10,7 @@ subprocess32==3.2.7; python_version < '3.2' and os_name == 'posix'
 mock==2.0.0
 pyaml==16.9.0
 python-dateutil==2.5.3
+simplejson==3.10.0
 
 # ui testing
 attrdict==2.0.0

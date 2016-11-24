@@ -5,7 +5,7 @@ Whale testing toolkit
 
 Whale is intended to provide the community with a testing toolkit based on
 Stepler framework that is capable of perform testing of tool to manage
-lifecycle of Ceph cluster named Shrimp.
+lifecycle of Ceph cluster named Decapod.
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");

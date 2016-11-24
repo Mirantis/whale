@@ -101,14 +101,4 @@ Deep to structure
    :maxdepth: 1
 
    steps_concept
-   common_fixtures
-   cinder
-   baremetal
-   glance
-   heat
-   horizon
-   keystone
-   neutron
-   nova
-   os_faults
-   third_party
+   decapod

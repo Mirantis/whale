@@ -1,7 +1,7 @@
 """
-------
-Config
-------
+--------------
+Shrimp steps
+--------------
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +17,11 @@ Config
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 
+from .roles import *  # noqa
+from .users import *  # noqa
 
-# If DECAPOD_URL is undefined, corresponding fixture raises exception.
-# DECAPOD_URL absence doesn't raise exception here, because for docs generation
-# and unittests launching this variable doesn't need.
-
-DECAPOD_URL = os.environ.get('DECAPOD_URL')
-DECAPOD_LOGIN = os.environ.get('DECAPOD_LOGIN', 'login')
-DECAPOD_PASSWORD = os.environ.get('DECAPOD_PASSWORD', 'password')
+__all__ = [
+    'RoleSteps',
+    'UserSteps',
+]

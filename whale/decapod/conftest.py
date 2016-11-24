@@ -1,9 +1,9 @@
 """
 ---------------
-Global conftest
+Decapod conftest
 ---------------
 
-Includes fixtures available in global scope among all tests.
+Contains fixtures specific for decapod.
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,3 +19,5 @@ Includes fixtures available in global scope among all tests.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .fixtures import *  # noqa
+from .fixtures import __all__  # noqa

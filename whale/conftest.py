@@ -1,7 +1,9 @@
 """
-------
-Config
-------
+---------------
+Global conftest
+---------------
+
+Includes fixtures available in global scope among all tests.
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +19,19 @@ Config
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+from whale.decapod.conftest import * #noqa
 
+__all__ = sorted([  # sort for documentation
+    'get_decapod_client',
+    'decapod_client',
 
-# If DECAPOD_URL is undefined, corresponding fixture raises exception.
-# DECAPOD_URL absence doesn't raise exception here, because for docs generation
-# and unittests launching this variable doesn't need.
+    'get_role_steps',
+    'role_steps',
+    'create_user',
+    'user',
 
-DECAPOD_URL = os.environ.get('DECAPOD_URL')
-DECAPOD_LOGIN = os.environ.get('DECAPOD_LOGIN', 'login')
-DECAPOD_PASSWORD = os.environ.get('DECAPOD_PASSWORD', 'password')
+    'get_user_steps',
+    'user_steps',
+    'create_user',
+    'user',
+])
