@@ -16,7 +16,7 @@ simplejson==3.10.0
 attrdict==2.0.0
 PyHamcrest==1.9.0
 python-pom==1.0.2
-selenium==2.53.6
+selenium==3.0.1
 xvfbwrapper==0.2.8
 
 # debug
