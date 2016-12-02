@@ -65,12 +65,8 @@ class UserSteps(BaseSteps):
         if check:
             self.check_user_presence(user.get('id'))
             assert_that(user['data']['login'], equal_to(user_name))
-
-            if full_name:
-                assert_that(user['data']['full_name'],
-                            equal_to(full_name))
-            if email:
-                assert_that(user['data']['email'], equal_to(email))
+            assert_that(user['data']['full_name'], equal_to(full_name))
+            assert_that(user['data']['email'], equal_to(email))
             if role_id:
                 assert_that(user["data"]["role_id"],
                             equal_to(role_id))
@@ -107,7 +103,7 @@ class UserSteps(BaseSteps):
                 user = self._client.get_user(user_id)
                 if user['time_deleted'] == 0:
                     is_present = True
-                if user['time_deleted'] != 0:
+                else:
                     is_present = False
             except exceptions.DecapodAPIError:
                 is_present = False

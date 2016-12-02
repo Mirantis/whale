@@ -27,8 +27,8 @@ __all__ = sorted([  # sort for documentation
 
     'get_role_steps',
     'role_steps',
-    'create_user',
-    'user',
+    'create_role',
+    'role',
 
     'get_user_steps',
     'user_steps',

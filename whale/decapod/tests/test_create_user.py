@@ -23,7 +23,7 @@ import pytest
 
 @pytest.mark.idempotent_id('')
 def test_create_user(user):
-    """**Scenario:** Check sharing glance image to another project.
+    """**Scenario:** Check user creation.
 
     **Setup:**
 

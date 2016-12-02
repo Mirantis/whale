@@ -61,12 +61,16 @@ def role_steps(get_role_steps):
 
 @pytest.yield_fixture
 def create_role(role_steps):
-    """Fixture to create role with options.
+    """Callable fixture to create role with options.
+
+    Can be called several times during a test.
+    After the test it destroys all created roles.
 
     Args:
         role_steps (object): instantiated role steps
 
-    Can be called several times during test.
+    Yields:
+        function: function to create user with options
     """
     roles = []
 

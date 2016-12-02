@@ -50,6 +50,6 @@ def decapod_client(get_decapod_client):
         get_decapod_client (function): function to get decapod client
 
     Returns:
-        decapod.client.V1Client: instantiated decapod client
+        decapodclient.V1Client: instantiated decapod client
     """
     return get_decapod_client()

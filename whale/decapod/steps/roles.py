@@ -53,6 +53,7 @@ class RoleSteps(BaseSteps):
 
         if check:
             self.check_role_presence(role['id'])
+
         return role
 
     @steps_checker.step
@@ -148,7 +149,7 @@ class RoleSteps(BaseSteps):
                 role = self._client.get_role(role_id)
                 if role['time_deleted'] == 0:
                     is_present = True
-                if role['time_deleted'] != 0:
+                else:
                     is_present = False
             except exceptions.DecapodAPIError:
                 is_present = False

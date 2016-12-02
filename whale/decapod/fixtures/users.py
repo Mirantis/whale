@@ -19,8 +19,9 @@ User fixtures
 
 import pytest
 
-from whale.decapod import steps
 from stepler.third_party import utils
+
+from whale.decapod import steps
 
 __all__ = [
     'get_user_steps',
@@ -61,7 +62,7 @@ def user_steps(get_user_steps):
 
 @pytest.yield_fixture
 def create_user(user_steps):
-    """Session callable fixture to create user with options.
+    """Callable fixture to create user with options.
 
     Can be called several times during a test.
     After the test it destroys all created users.

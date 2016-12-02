@@ -1,6 +1,6 @@
 """
 --------------
-Shrimp steps
+Decapod steps
 --------------
 """
 

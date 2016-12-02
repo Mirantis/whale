@@ -39,5 +39,4 @@ UI_TIMEOUT = 30
 ACTION_TIMEOUT = 60
 EVENT_TIMEOUT = 180
 
-OS_DASHBOARD_URL = os.environ.get('OS_DASHBOARD_URL')  # should be defined!
 VIRTUAL_DISPLAY = os.environ.get('VIRTUAL_DISPLAY')

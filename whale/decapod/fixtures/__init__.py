@@ -1,6 +1,6 @@
 """
 ---------------
-Shrimp fixtures
+Decapod fixtures
 ---------------
 """
 
