@@ -10,3 +10,4 @@ test_results
 build
 .tox
 *.log
+.DS_Store

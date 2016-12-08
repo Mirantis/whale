@@ -20,7 +20,6 @@ Auth tests
 import pytest
 
 
-#@pytest.mark.usefixtures('any_one')
 @pytest.mark.idempotent_id('')
 def test_login(login):
     """Verify that one can login and logout."""

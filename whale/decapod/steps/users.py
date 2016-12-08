@@ -17,7 +17,7 @@ User steps
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from hamcrest import (assert_that,equal_to, has_entries)  # noqa
+from hamcrest import (assert_that, equal_to)  # noqa
 from decapodlib import exceptions
 
 from stepler.base import BaseSteps

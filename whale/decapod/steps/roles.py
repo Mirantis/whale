@@ -49,7 +49,9 @@ class RoleSteps(BaseSteps):
         Raises:
             TimeoutExpired: if check failed after timeout
         """
-        role = self._client.create_role(role_name, permissions, **kwargs)
+        role = self._client.create_role(name=role_name,
+                                        permissions=permissions,
+                                        **kwargs)
 
         if check:
             self.check_role_presence(role['id'])
@@ -68,33 +70,34 @@ class RoleSteps(BaseSteps):
         Raises:
             TimeoutExpired|AssertionError: if check failed
         """
-        self._client.delete_role(role_id, **kwargs)
+        self._client.delete_role(role_id=role_id, **kwargs)
         if check:
-            self.check_role_presence(role_id, must_present=False)
+            self.check_role_presence(role_id=role_id, must_present=False)
 
     @steps_checker.step
-    def get_role(self, check=True, **kwargs):
+    def get_role(self, role_id, check=True, **kwargs):
         """Step to retrieve role.
 
         Args:
+            role_id (str): role id
             check (bool): flag whether to check step or not
             **kwargs: any suitable to role keyword arguments
 
         Returns:
             role (dict): model of the role
         """
-        role = self._client.get_role(**kwargs)
+        role = self._client.get_role(role_id=role_id, **kwargs)
         if check:
             assert_that(role, has_properties(**kwargs))
 
         return role
 
     @steps_checker.step
-    def get_role_id(self, name, check=True, **kwargs):
+    def get_role_id(self, role_name, check=True, **kwargs):
         """Step to retrieve role id.
 
         Args:
-            name (str): role name
+            role_name (str): role name
             check (bool): flag whether to check step or not
             **kwargs: any suitable to role keyword arguments
 
@@ -103,7 +106,7 @@ class RoleSteps(BaseSteps):
         """
         roles = self._client.get_roles(**kwargs)
         for role in roles['items']:
-            if role['data']['name'] == name:
+            if role['data']['name'] == role_name:
                 role_id = role['id']
 
         if check:
@@ -146,7 +149,7 @@ class RoleSteps(BaseSteps):
 
         def _check_role_presence():
             try:
-                role = self._client.get_role(role_id)
+                role = self._client.get_role(role_id=role_id)
                 if role['time_deleted'] == 0:
                     is_present = True
                 else:

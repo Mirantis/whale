@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# stepler documentation build configuration file, created by
+# whale documentation build configuration file, created by
 # sphinx-quickstart on Fri Sep 23 18:01:17 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -19,7 +19,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('../..'))  # add stepler root path
+sys.path.insert(0, os.path.abspath('../..'))  # add whale root path
 
 # mock modules with C-extensions, according to
 # http://read-the-docs.readthedocs.io/en/latest/faq.html#i-get-import-errors-on-libraries-that-depend-on-c-modules  # noqa
@@ -32,10 +32,10 @@ class Mock(MagicMock):
     def __getattr__(cls, name):
             return Mock()
 
-MOCK_MODULES = [
-    'os_faults',
-]
-sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
+# MOCK_MODULES = [
+#     'os_faults',
+# ]
+# sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 # -- General configuration ------------------------------------------------
 
@@ -47,7 +47,6 @@ sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'oslosphinx',
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.doctest',
@@ -72,9 +71,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'stepler'
-copyright = u'2016'  # , Mirantis'
-author = ''  # u'Mirantis'
+project = u'Whale'
+copyright = u'2016, Mirantis'
+author = 'Maksym Shalamov'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -143,7 +142,7 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -157,7 +156,7 @@ html_theme = 'alabaster'
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = u'stepler v0.0.1'
+# html_title = u'whale v0.0.1'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
@@ -257,7 +256,7 @@ html_static_path = ['_static']
 # html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'steplerdoc'
+htmlhelp_basename = 'whaledoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -283,7 +282,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'stepler.tex', u'stepler Documentation',
+    (master_doc, 'whale.tex', u'whale Documentation',
      u'Mirantis', 'manual'),
 ]
 
@@ -325,7 +324,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'stepler', u'stepler Documentation',
+    (master_doc, 'whale', u'whale Documentation',
      [author], 1)
 ]
 
@@ -340,8 +339,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'stepler', u'stepler Documentation',
-     author, 'stepler', 'One line description of project.',
+    (master_doc, 'whale', u'Whale Documentation',
+     author, 'whale', 'One line description of project.',
      'Miscellaneous'),
 ]
 

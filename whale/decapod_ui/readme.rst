@@ -23,7 +23,7 @@ Preparation
 ==========
 How to run
 ==========
-``export OS_DASHBOARD_URL=http://horizon/dashboard/`` - should explain to framework where horizon dashboard is located.
+``export DECAPOD_WD_URL=http://decapod/dashboard/`` - should explain to framework where decapod dashboard is located.
 
 ``py.test whale/decapod_ui -v`` - single-threaded mode to launch tests at display
 

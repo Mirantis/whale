@@ -3,7 +3,7 @@
 Decapod conftest
 ----------------
 
-Contains fixtures specific for horizon (UI testing).
+Contains fixtures specific for Decapod (UI testing).
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");
