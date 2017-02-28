@@ -52,6 +52,7 @@ class ClusterSteps(BaseSteps):
 
         if check:
             self.check_cluster_presence(cluster['id'])
+            assert_that(cluster['data']['name'], equal_to(cluster_name))
 
         return cluster
 

@@ -17,9 +17,10 @@ Fixtures to run horizon, login, create demo user, etc
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import pytest
+from stepler.horizon.fixtures.auto_use import report_dir
+from stepler.horizon.fixtures.auto_use import video_capture
+from stepler.horizon.fixtures.auto_use import virtual_display
 
 from whale.decapod_ui.app import Decapod
 from whale.decapod_ui.steps import AuthSteps
@@ -30,11 +31,15 @@ __all__ = [
     'auth_steps',
     'decapod',
     'login',
+
+    'video_capture',
+    'virtual_display',
+    'report_dir',
 ]
 
 
 @pytest.yield_fixture
-def decapod():
+def decapod(video_capture):
     """Initial fixture to start."""
     app = Decapod(config.DECAPOD_WD_URL)
     yield app

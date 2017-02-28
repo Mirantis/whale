@@ -63,7 +63,7 @@ class UserSteps(BaseSteps):
                                         **kwargs)
 
         if check:
-            self.check_user_presence(user.get('id'))
+            self.check_user_presence(user['id'])
             assert_that(user['data']['login'], equal_to(user_name))
             assert_that(user['data']['full_name'], equal_to(full_name))
             assert_that(user['data']['email'], equal_to(email))

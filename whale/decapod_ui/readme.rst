@@ -20,10 +20,24 @@ Preparation
 
 ``sudo apt-get install libav-tools firefox``
 
+Download the latest executable geckodriver from https://github.com/mozilla/geckodriver/releases to run the latest firefox using selenium.
+Add the directory containing the executable to the system path.
+
+For example for Ubuntu run the following commands:
+``wget https://github.com/mozilla/geckodriver/releases/download/v0.14.0/geckodriver-v0.14.0-linux64.tar.gz``
+``tar -xzvf geckodriver-v0.14.0-linux64.tar.gz``
+``export PATH=$PATH:$(pwd)``
+
 ==========
 How to run
 ==========
-``export DECAPOD_WD_URL=http://decapod/dashboard/`` - should explain to framework where decapod dashboard is located.
+Before launching you should export some openstack environment variables::
+
+* ``DECAPOD_URL`` (default value ``'default'``)
+* ``DECAPOD_LOGIN`` (default value ``'user'``)
+* ``DECAPOD_PASSWORD`` (default value ``'password'``)
+
+Let’s view typical commands to launch test in different ways:
 
 ``py.test whale/decapod_ui -v`` - single-threaded mode to launch tests at display
 

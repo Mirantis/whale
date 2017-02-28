@@ -20,6 +20,6 @@ Auth tests
 import pytest
 
 
-@pytest.mark.idempotent_id('')
+@pytest.mark.idempotent_id('418f64f2-4f19-44e0-af25-bb561d6c0474')
 def test_login(login):
     """Verify that one can login and logout."""

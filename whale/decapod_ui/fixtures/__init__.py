@@ -24,4 +24,8 @@ __all__ = sorted([  # sort for documentation
     'auth_steps',
     'decapod',
     'login',
+
+    'video_capture',
+    'virtual_display',
+    'report_dir',
 ])

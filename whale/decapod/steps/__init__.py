@@ -22,6 +22,7 @@ from .roles import *  # noqa
 from .users import *  # noqa
 
 __all__ = [
+    'ClusterSteps',
     'RoleSteps',
     'UserSteps',
 ]

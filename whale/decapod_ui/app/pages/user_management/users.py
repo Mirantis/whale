@@ -17,15 +17,10 @@ Users page
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pom
-from pom import ui
-from selenium.webdriver.common.by import By
-
-from ..base import PageBase
+from whale.decapod_ui.app.pages import base
 
 
-@ui.register_ui()
-class PageUsers(PageBase):
+class PageUsers(base.PageBase):
     """Page to management users."""
 
     url = "/admin/users"

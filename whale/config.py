@@ -19,13 +19,11 @@ Config
 
 import os
 
-
 # If DECAPOD_URL is undefined, corresponding fixture raises exception.
 # DECAPOD_URL absence doesn't raise exception here, because for docs generation
 # and unittests launching this variable doesn't need.
 
-# Decapod
-
+# Decapod credentials
 DECAPOD_URL = os.environ.get('DECAPOD_URL')
 DECAPOD_WD_URL = 'http://{}'.format(DECAPOD_URL)
 DECAPOD_LOGIN = os.environ.get('DECAPOD_LOGIN', 'login')

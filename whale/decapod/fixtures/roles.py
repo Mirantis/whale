@@ -20,6 +20,7 @@ Role fixtures
 import pytest
 
 from whale.decapod import steps
+
 from stepler.third_party.utils import generate_ids
 
 __all__ = [

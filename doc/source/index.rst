@@ -43,8 +43,8 @@ Make following commands in terminal::
    virtualenv .venv
    . .venv/bin/activate
    pip install -U pip
+   git submodule update --init --recursive
    pip install -r requirements.txt
-   pip install lib/decapodlib-{appropriate-version}-py2.py3-none-any.whl
 
 ----------------
 How to run tests

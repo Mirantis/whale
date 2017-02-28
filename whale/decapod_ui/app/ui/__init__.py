@@ -17,6 +17,6 @@ Custom UI components
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .navigate_menu import NavigateMenu  # noqa
-from .initiated_ui import InitiatedUI  # noqa
 from .form import Form  # noqa
+from .initiated_ui import InitiatedUI  # noqa
+from .navigate_menu import NavigateMenu  # noqa

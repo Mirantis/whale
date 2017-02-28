@@ -19,8 +19,6 @@ Includes fixtures available in global scope among all tests.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from whale.decapod.conftest import * #noqa
-
 __all__ = sorted([  # sort for documentation
     'get_decapod_client',
     'decapod_client',

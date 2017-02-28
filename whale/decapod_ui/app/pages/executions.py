@@ -17,14 +17,10 @@ Executions page
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pom import ui
-from selenium.webdriver.common.by import By
-
-from .base import PageBase
+from whale.decapod_ui.app.pages import base
 
 
-@ui.register_ui()
-class PageExecutions(PageBase):
+class PageExecutions(base.PageBase):
     """Page to management executions."""
 
     url = "/executions"

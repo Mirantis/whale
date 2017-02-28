@@ -20,14 +20,13 @@ User Management page
 from pom import ui
 from selenium.webdriver.common.by import By
 
-from ..base import PageBase
-
+from whale.decapod_ui.app.pages import base
 from whale.decapod_ui.app import ui as _ui
 
 
 @ui.register_ui(navigate_menu=_ui.NavigateMenu(
     By.XPATH, '//ul[@class="col-xs-12 navigation"]/li'))
-class PageUserManagement(PageBase):
+class PageUserManagement(base.PageBase):
     """User Management page."""
 
     url = '/'

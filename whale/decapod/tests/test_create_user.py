@@ -21,7 +21,7 @@ User tests
 import pytest
 
 
-@pytest.mark.idempotent_id('')
+@pytest.mark.idempotent_id('a9c69976-e661-42bb-9fbc-9afa3d30f3e8')
 def test_create_user(user):
     """**Scenario:** Check user creation.
 

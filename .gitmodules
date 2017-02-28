@@ -1,0 +1,3 @@
+[submodule "decapod"]
+    path = decapod
+    url = https://gerrit.mcp.mirantis.net/ceph/decapod
