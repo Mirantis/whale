@@ -1,7 +1,7 @@
 """
----------------
+----------------
 Decapod fixtures
----------------
+----------------
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,8 +18,9 @@ Decapod fixtures
 # limitations under the License.
 
 
-from .roles import *  # noqa
+from .clusters import *  # noqa
 from .decapod import *  # noqa
+from .roles import *  # noqa
 from .users import *  # noqa
 
 __all__ = sorted([  # sort for documentation
@@ -35,4 +36,9 @@ __all__ = sorted([  # sort for documentation
     'user_steps',
     'create_user',
     'user',
+
+    'get_cluster_steps',
+    'cluster_steps',
+    'create_cluster',
+    'cluster',
 ])

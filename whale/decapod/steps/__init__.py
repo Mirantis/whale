@@ -1,7 +1,7 @@
 """
---------------
+-------------
 Decapod steps
---------------
+-------------
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@ Decapod steps
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+from .clusters import *  # noqa
 from .roles import *  # noqa
 from .users import *  # noqa
 

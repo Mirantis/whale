@@ -19,9 +19,10 @@ Servers steps
 
 from decapodlib import exceptions
 from hamcrest import assert_that, equal_to  # noqa H301
-from stepler import base
 from stepler.third_party import steps_checker
 from stepler.third_party import waiter
+
+from whale import base
 
 __all__ = [
     'ServerSteps'

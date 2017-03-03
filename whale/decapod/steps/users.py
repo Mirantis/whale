@@ -17,19 +17,19 @@ User steps
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from hamcrest import (assert_that, equal_to)  # noqa
 from decapodlib import exceptions
-
-from stepler.base import BaseSteps
+from hamcrest import assert_that, equal_to  # noqa H301
 from stepler.third_party import steps_checker
 from stepler.third_party import waiter
+
+from whale import base
 
 __all__ = [
     'UserSteps'
 ]
 
 
-class UserSteps(BaseSteps):
+class UserSteps(base.BaseSteps):
     """User steps."""
 
     @steps_checker.step

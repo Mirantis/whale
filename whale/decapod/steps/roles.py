@@ -17,20 +17,20 @@ Role steps
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from hamcrest import (equal_to, assert_that,
-                      has_properties, is_not, empty)  # noqa
 from decapodlib import exceptions
-
-from stepler.base import BaseSteps
+from hamcrest import (assert_that, empty, equal_to, has_properties,
+                      is_not)  # noqa H301
 from stepler.third_party import steps_checker
 from stepler.third_party import waiter
+
+from whale import base
 
 __all__ = [
     'RoleSteps'
 ]
 
 
-class RoleSteps(BaseSteps):
+class RoleSteps(base.BaseSteps):
     """Role steps."""
 
     @steps_checker.step
