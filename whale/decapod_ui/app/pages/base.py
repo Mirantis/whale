@@ -25,12 +25,19 @@ from whale.decapod_ui.app import ui as _ui
 
 
 @ui.register_ui(
+    link_clusters=ui.Link(By.CSS_SELECTOR, 'a[href="/clusters"]'))
+class Header(ui.Block):
+    """Header block."""
+
+
+@ui.register_ui(
     current_user=ui.Link(
         By.XPATH, '//div[@class="current-user"]/a[1]'),
     logout=ui.Link(
         By.XPATH, '//div[@class="current-user"]/a[2]'),
     navigate_menu=_ui.NavigateMenu(
-        By.XPATH, './/ul[@class="col-xs-8 navigation"]/li'))
+        By.XPATH, './/ul[@class="col-xs-8 navigation"]/li'),
+    header=Header(By.CSS_SELECTOR, "div.header"))
 class PageBase(pom.Page):
     """Base page of user account."""
 

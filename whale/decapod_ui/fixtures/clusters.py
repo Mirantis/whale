@@ -1,9 +1,7 @@
 """
----------------
-Global conftest
----------------
-
-Includes fixtures available in global scope among all tests.
+----------------
+Cluster fixtures
+----------------
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,5 +17,22 @@ Includes fixtures available in global scope among all tests.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from whale.decapod.conftest import *  # noqa
-from whale.decapod.conftest import __all__  # noqa
+import pytest
+
+from whale.decapod_ui.steps import ClusterSteps
+
+__all__ = ['ui_cluster_steps']
+
+
+@pytest.fixture
+def ui_cluster_steps(decapod, login):
+    """Function fixture to get cluster steps.
+
+    Args:
+        decapod (Decapod): instatiated decapod application
+        login (None): user should log in before cluster actions
+
+    Returns:
+        ClusterSteps: instantiated cluster steps
+    """
+    return ClusterSteps(decapod)

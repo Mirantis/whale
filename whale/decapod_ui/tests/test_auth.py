@@ -22,4 +22,13 @@ import pytest
 
 @pytest.mark.idempotent_id('418f64f2-4f19-44e0-af25-bb561d6c0474')
 def test_login(login):
-    """Verify that one can login and logout."""
+    """**Scenario:** User may log in and log out to decapod UI.
+
+    **Setup:**
+
+    #. User logs in
+
+    **Teardown:**
+
+    #. User logs out
+    """

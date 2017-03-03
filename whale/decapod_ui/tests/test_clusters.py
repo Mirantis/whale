@@ -1,9 +1,7 @@
 """
----------------
-Global conftest
----------------
-
-Includes fixtures available in global scope among all tests.
+-------------
+Cluster tests
+-------------
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,5 +17,19 @@ Includes fixtures available in global scope among all tests.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from whale.decapod.conftest import *  # noqa
-from whale.decapod.conftest import __all__  # noqa
+import pytest
+
+
+@pytest.mark.idempotent_id('38036bb4-1afb-4344-acaf-2558099bfbef')
+def test_create_cluster(ui_cluster_steps, cluster_steps):
+    """**Scenario:** Cluster may be created in UI.
+
+    **Steps:**
+
+    #. Create cluster via UI
+    #. Find cluster by name via API
+    #. Delete cluster via API
+    """
+    cluster = ui_cluster_steps.create_cluster()
+    cluster_id = cluster_steps.get_cluster_id(cluster.name)
+    cluster_steps.delete_cluster(cluster_id)

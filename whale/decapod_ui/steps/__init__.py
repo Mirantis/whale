@@ -19,9 +19,11 @@ Contains steps specific for decapod (UI testing).
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .auth import AuthSteps  # noqa
+from .auth import AuthSteps
+from .clusters import ClusterSteps
 
 
 __all__ = [
     'AuthSteps',
+    'ClusterSteps',
 ]

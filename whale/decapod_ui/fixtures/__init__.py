@@ -18,6 +18,7 @@ Horizon fixtures
 # limitations under the License.
 
 from .app import *  # noqa
+from .clusters import *  # noqa
 
 
 __all__ = sorted([  # sort for documentation
@@ -28,4 +29,6 @@ __all__ = sorted([  # sort for documentation
     'video_capture',
     'virtual_display',
     'report_dir',
+
+    'ui_cluster_steps',
 ])
