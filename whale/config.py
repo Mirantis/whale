@@ -48,3 +48,5 @@ VIRTUAL_DISPLAY = os.environ.get('VIRTUAL_DISPLAY')
 # Workaround: add WebDriverException to pom PRESENCE_ERRORS.
 base.PRESENCE_ERRORS = tuple(list(base.PRESENCE_ERRORS) +
                              [exceptions.WebDriverException])
+
+PLAYBOOK_DEPLOY_CLUSTER = 'cluster_deploy'

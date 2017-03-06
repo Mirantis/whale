@@ -17,13 +17,18 @@ Decapod steps
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 from .clusters import *  # noqa
+from .playbooks import *  # noqa
+from .playbooks_config import *  # noqa
 from .roles import *  # noqa
 from .users import *  # noqa
 from .servers import *  # noqa
 
 __all__ = [
     'ClusterSteps',
+    'PlaybookSteps',
+    'PlaybookConfigSteps',
     'RoleSteps',
     'UserSteps',
     'ServerSteps'

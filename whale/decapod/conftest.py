@@ -1,7 +1,7 @@
 """
----------------
+----------------
 Decapod conftest
----------------
+----------------
 
 Contains fixtures specific for decapod.
 """
