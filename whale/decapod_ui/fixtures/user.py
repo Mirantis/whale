@@ -1,6 +1,6 @@
 """
 -------------
-Decapod pages
+User fixtures
 -------------
 """
 
@@ -17,25 +17,24 @@ Decapod pages
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base import PageBase
-from .clusters import PageClusters
-from .configurations import PageConfigurations
-from .executions import PageExecutions
-from .login import PageLogin
-from .playbooks import PagePlaybooks
-from .servers import PageServers
-from .user_management.roles import PageRoles
-from .user_management.users import PageUsers
+import pytest
 
+from whale.decapod_ui.steps import user
 
-pages = [
-    PageBase,
-    PageClusters,
-    PageConfigurations,
-    PageExecutions,
-    PageLogin,
-    PagePlaybooks,
-    PageRoles,
-    PageServers,
-    PageUsers,
+__all__ = [
+    'ui_user_steps',
 ]
+
+
+@pytest.fixture
+def ui_user_steps(decapod, login):
+    """Function fixture to get user steps.
+
+    Args:
+        login (None): should log in decapod before steps using
+        decapod (Decapod): instantiated decapod web application
+
+    Returns:
+        UserSteps: Instantiated user steps
+    """
+    return user.UserSteps(decapod)

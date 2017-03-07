@@ -36,6 +36,7 @@ __all__ = sorted([  # sort for documentation
     'user_steps',
     'create_user',
     'user',
+    'cleanup_users',
 
     'get_cluster_steps',
     'cluster_steps',

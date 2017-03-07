@@ -19,7 +19,7 @@ Horizon fixtures
 
 from .app import *  # noqa
 from .clusters import *  # noqa
-
+from .user import *  # noqa
 
 __all__ = sorted([  # sort for documentation
     'auth_steps',
@@ -31,4 +31,6 @@ __all__ = sorted([  # sort for documentation
     'report_dir',
 
     'ui_cluster_steps',
+
+    'ui_user_steps',
 ])

@@ -21,9 +21,10 @@ Contains steps specific for decapod (UI testing).
 
 from .auth import AuthSteps
 from .clusters import ClusterSteps
-
+from .user import UserSteps
 
 __all__ = [
     'AuthSteps',
     'ClusterSteps',
+    'UserSteps',
 ]

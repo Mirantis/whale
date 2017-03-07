@@ -52,7 +52,7 @@ def auth_steps(decapod):
     return AuthSteps(decapod)
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def login(auth_steps):
     """Login to decapod.
 

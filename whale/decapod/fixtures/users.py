@@ -28,6 +28,7 @@ __all__ = [
     'user_steps',
     'create_user',
     'user',
+    'cleanup_users',
 ]
 
 
@@ -48,19 +49,25 @@ def get_user_steps(get_decapod_client):
 
 
 @pytest.fixture
-def user_steps(get_user_steps):
+def user_steps(get_user_steps, cleanup_users):
     """Function fixture to get user steps.
 
     Args:
         get_user_steps (function): function to get user steps
+        cleanup_users (function): function to cleanup users after test
 
-    Returns:
+    Yields:
         user_steps (object): instantiated user steps
     """
-    return get_user_steps()
+    _user_steps = get_user_steps()
+    users = _user_steps.get_users(check=False)
+    users_ids_before = {user['id'] for user in users}
+
+    yield _user_steps
+    cleanup_users(_user_steps, uncleanable_ids=users_ids_before)
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def create_user(user_steps):
     """Callable fixture to create user with options.
 
@@ -103,3 +110,15 @@ def user(role, create_user):
                        full_name=next(utils.generate_ids('full_name')),
                        email='{0}@example.com'.format(user_name),
                        role_id=role['id'])
+
+
+@pytest.fixture(scope='session')
+def cleanup_users():
+    """"Callable session fixture to cleanup users."""
+    def _cleanup_users(_users_steps, uncleanable_ids=None):
+        uncleanable_ids = uncleanable_ids or []
+        for user in _users_steps.get_users(check=False):
+            if user['id'] not in uncleanable_ids:
+                _users_steps.delete_user(user['id'])
+
+    return _cleanup_users

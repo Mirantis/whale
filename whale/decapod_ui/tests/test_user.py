@@ -1,6 +1,6 @@
 """
 -------------
-Decapod pages
+User UI tests
 -------------
 """
 
@@ -17,25 +17,21 @@ Decapod pages
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base import PageBase
-from .clusters import PageClusters
-from .configurations import PageConfigurations
-from .executions import PageExecutions
-from .login import PageLogin
-from .playbooks import PagePlaybooks
-from .servers import PageServers
-from .user_management.roles import PageRoles
-from .user_management.users import PageUsers
+import pytest
 
 
-pages = [
-    PageBase,
-    PageClusters,
-    PageConfigurations,
-    PageExecutions,
-    PageLogin,
-    PagePlaybooks,
-    PageRoles,
-    PageServers,
-    PageUsers,
-]
+@pytest.mark.idempotent_id('3476fac7-3415-4d99-92fd-41725a183044')
+def test_create_user(role, user_steps, ui_user_steps):
+    """**Scenario:** User may be created in UI.
+
+    **Steps:**
+
+    #. Create user via UI
+    #. Find user by name via API
+
+    **Teardown:**
+
+    #. Delete user via API
+    """
+    user_login = ui_user_steps.create_user(role['data']['name'])
+    user_steps.get_user_id(user_login)
