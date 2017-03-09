@@ -17,8 +17,10 @@ Role steps
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from hamcrest import assert_that, empty, equal_to, is_not  # noqa H301
+from hamcrest import (assert_that, empty, equal_to, has_entries,
+                      is_not)  # noqa H301
 from stepler.third_party import steps_checker
+from stepler.third_party import utils
 
 from whale import base
 
@@ -31,12 +33,13 @@ class RoleSteps(base.BaseSteps):
     """Role steps."""
 
     @steps_checker.step
-    def create_role(self, role_name, permissions, check=True, **kwargs):
+    def create_role(self, role_name=None, permissions=None, check=True,
+                    **kwargs):
         """Step to create role.
 
         Args:
-            role_name (str): the name of the role
-            permissions (list): the list of the role permissions
+            role_name (str|None): the name of the role
+            permissions (list|None): the list of the role permissions
             check (bool): flag whether to check step or not
             **kwargs: any suitable keyword arguments
 
@@ -46,6 +49,9 @@ class RoleSteps(base.BaseSteps):
         Raises:
             TimeoutExpired: if check failed after timeout
         """
+        role_name = role_name or next(utils.generate_ids('role'))
+        permissions = permissions or self.get_permissions()
+
         role = self._client.create_role(role_name, permissions, **kwargs)
 
         if check:
@@ -53,6 +59,34 @@ class RoleSteps(base.BaseSteps):
             assert_that(role['data']['name'], equal_to(role_name))
             assert_that(sorted(role['data']['permissions']),
                         equal_to(sorted(permissions)))
+
+        return role
+
+    @steps_checker.step
+    def update_role(self, role, new_data, check=True, **kwargs):
+        """Step to update role with new data.
+
+        Args:
+            role (dict|str): role or its id
+            new_data (dict): new data for role
+            check (bool): flag whether to check step or not
+            **kwargs: any suitable keyword arguments
+
+        Returns:
+            role (dict): model of new role
+
+        Raises:
+            AssertionError: if check failed
+        """
+        if not isinstance(role, dict):
+            role = self.get_role(role)
+
+        role['data'].update(new_data)
+
+        role = self._client.update_role(role, **kwargs)
+
+        if check:
+            assert_that(role['data'], has_entries(new_data))
 
         return role
 
@@ -66,7 +100,7 @@ class RoleSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Raises:
-            TimeoutExpired|AssertionError: if check failed
+            TimeoutExpired: if check failed
         """
         self._client.delete_role(role_id, **kwargs)
 
@@ -94,6 +128,27 @@ class RoleSteps(base.BaseSteps):
         return role
 
     @steps_checker.step
+    def get_roles(self, check=True, **kwargs):
+        """Step to get list of all roles.
+
+        Args:
+            check (bool): flag whether to check step or not
+            **kwargs: any suitable keyword arguments
+
+        Returns:
+            roles (list): list of roles
+
+        Raises:
+            AssertionError: if check was triggered to an error
+        """
+        roles = self._client.get_roles(**kwargs)['items']
+
+        if check:
+            assert_that(roles, is_not(empty()))
+
+        return roles
+
+    @steps_checker.step
     def get_permissions(self, check=True, **kwargs):
         """Step to retrieve permissions.
 
@@ -101,9 +156,8 @@ class RoleSteps(base.BaseSteps):
             check (bool): flag whether to check step or not
             **kwargs: any suitable keyword arguments
 
-         Returns:
+        Returns:
             permissions (list):  a list of permissions
-
         """
         permissions = self._client.get_permissions(**kwargs)['items']
 
