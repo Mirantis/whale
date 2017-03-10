@@ -20,9 +20,11 @@ Decapod steps
 from .clusters import *  # noqa
 from .roles import *  # noqa
 from .users import *  # noqa
+from .servers import *  # noqa
 
 __all__ = [
     'ClusterSteps',
     'RoleSteps',
     'UserSteps',
+    'ServerSteps'
 ]
