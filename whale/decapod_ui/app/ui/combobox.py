@@ -36,8 +36,7 @@ class ComboBox(ui.ComboBox):
         except exceptions.NoSuchElementException as e:
             if e.msg == 'No options are selected':
                 return ''
-            else:
-                raise
+            raise
 
     @value.setter
     @utils.timeit

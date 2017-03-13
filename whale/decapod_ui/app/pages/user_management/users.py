@@ -25,12 +25,16 @@ from whale.decapod_ui.app import ui as _ui
 
 
 @ui.register_ui(
-    label_login=ui.UI(By.CSS_SELECTOR, "div.name"))
+    label_login=ui.UI(By.CSS_SELECTOR, "div.name"),
+    maximize_icon=ui.UI(
+        By.XPATH, './/span[@class="glyphicon glyphicon-triangle-right"]'),
+    minimize_icon=ui.UI(
+        By.XPATH, './/span[@class="glyphicon glyphicon-triangle-bottom"]'))
 class RowUser(ui.Row):
     """Row of user."""
 
 
-class ListUser(ui.List):
+class ListUsers(ui.List):
     """List of users."""
 
     row_cls = RowUser
@@ -49,11 +53,19 @@ class FormCreateUser(_ui.Form):
     cancel_locator = By.CSS_SELECTOR, 'button#close'
 
 
+class FormUserDetails(FormCreateUser):
+    """Form to change user details."""
+
+    submit_locator = By.CSS_SELECTOR, 'button.btn.btn-primary.pull-right'
+    cancel_locator = By.CSS_SELECTOR, 'button.btn.btn-danger'
+
+
 @ui.register_ui(
     button_create_user=ui.Button(
         By.CSS_SELECTOR, "div.main-button > button.btn-primary"),
     form_create_user=FormCreateUser(By.CSS_SELECTOR, "div.modal-content"),
-    list_users=ListUser(By.CSS_SELECTOR, "div.col-xs-12"))
+    list_users=ListUsers(By.CSS_SELECTOR, "div.col-xs-12"),
+    user_details=FormUserDetails(By.CSS_SELECTOR, "div.box.open"))
 class PageUsers(base.PageBase):
     """Page for users."""
 
