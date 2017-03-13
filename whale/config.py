@@ -19,6 +19,9 @@ Config
 
 import os
 
+from pom.ui import base
+from selenium.common import exceptions
+
 # If DECAPOD_URL is undefined, corresponding fixture raises exception.
 # DECAPOD_URL absence doesn't raise exception here, because for docs generation
 # and unittests launching this variable doesn't need.
@@ -38,3 +41,10 @@ ACTION_TIMEOUT = 60
 EVENT_TIMEOUT = 180
 
 VIRTUAL_DISPLAY = os.environ.get('VIRTUAL_DISPLAY')
+
+# TODO(agromov): If firefox can't get access to non-existing element,
+# it raises exception:
+# `WebDriverException: Message: can't access dead object`.
+# Workaround: add WebDriverException to pom PRESENCE_ERRORS.
+base.PRESENCE_ERRORS = tuple(list(base.PRESENCE_ERRORS) +
+                             [exceptions.WebDriverException])
