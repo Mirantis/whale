@@ -18,7 +18,8 @@ Servers steps
 # limitations under the License.
 
 from decapodlib import exceptions
-from hamcrest import assert_that, equal_to  # noqa H301
+from hamcrest import (assert_that, equal_to, is_not, empty,
+                      has_entries)  # noqa H301
 from stepler.third_party import steps_checker
 from stepler.third_party import waiter
 
@@ -55,36 +56,39 @@ class ServerSteps(base.BaseSteps):
                                             username=username,
                                             **kwargs)
         if check:
-            self.check_server_presence(server['id'])
-            assert_that(server['data']['fact']['ansible_machine_id'],
-                        equal_to(server_id))
-            assert_that(server['data']['name'], equal_to(host))
-            assert_that(server['data']['username'], equal_to(username))
-
+            self.check_server_presence(server_id)
+            server = self.get_server(server_id)
+            assert_that(server_id, equal_to(server['id']))
+            assert_that(host, equal_to(server['data']['name']))
+            assert_that(username, equal_to(server['data']['username']))
         return server
 
     @steps_checker.step
-    def delete_server(self, decapod_server_id, check=True, **kwargs):
+    def delete_server(self, server, check=True, **kwargs):
         """Step to delete server.
 
         Args:
             decapod_server_id (str): decapod server id
             check (bool): flag whether to check step or not
             **kwargs: any other attribute provided will be passed to server
+
+        Raises:
+            TimeoutExpired: if check failed
         """
-        self._client.delete_server(decapod_server_id, **kwargs)
+        server_id = self.get_id(server)
+        self._client.delete_server(server_id, **kwargs)
         if check:
-            self.check_server_presence(decapod_server_id, must_present=False)
+            self.check_server_presence(server_id, must_present=False)
 
     @steps_checker.step
     def check_server_presence(self,
-                              decapod_server_id,
+                              server_id,
                               must_present=True,
-                              timeout=0):
+                              timeout=60):
         """Step to check server presence.
 
         Args:
-            decapod_server_id (str): decapod server id
+            server_id (str): decapod server id
             must_present (bool): flag whether server should present or not
             timeout (int): seconds to wait a result of check
 
@@ -94,7 +98,7 @@ class ServerSteps(base.BaseSteps):
 
         def _check_server_presence():
             try:
-                server = self._client.get_server(decapod_server_id)
+                server = self._client.get_server(server_id)
                 if server['time_deleted'] == 0:
                     is_present = True
                 else:
@@ -105,3 +109,65 @@ class ServerSteps(base.BaseSteps):
             return waiter.expect_that(is_present, equal_to(must_present))
 
         waiter.wait(_check_server_presence, timeout_seconds=timeout)
+
+    @steps_checker.step
+    def get_servers(self, check=True):
+        """Step to get servers.
+
+        Args:
+            check (bool, optional): flag whether to check step or not
+
+        Returns:
+            servers (list): list of servers
+
+        Raises:
+            AssertionError: if check failed
+        """
+        servers = self._client.get_servers()['items']
+        if check:
+            assert_that(servers, is_not(empty()))
+        return servers
+
+    @steps_checker.step
+    def update_server(self, server, new_data, check=True):
+        """Step to update server.
+
+        Args:
+            server (dict|str): server or its ID
+            new_data (dict): new data for server
+            check (bool, optional): flag whether to check step or not
+
+        Returns:
+            server(dict): dict of updated server
+
+        Raises:
+            AssertionError: if check failed
+        """
+        server_id = self.get_id(server)
+        server = self.get_server(server_id)
+        server['data'].update(new_data)
+        self._client.put_server(server)
+        if check:
+            server = self.get_server(server)
+            assert_that(server['data'], has_entries(new_data))
+        return server
+
+    @steps_checker.step
+    def get_server(self, server, check=True):
+        """Step to get server.
+
+        Args:
+            server (dict|str): server or its ID
+            check (bool, optional): flag whether to check step or not
+
+        Returns:
+            server (dict): dict of server
+
+        Raises:
+            AssertionError: if check failed
+        """
+        server_id = self.get_id(server)
+        server = self._client.get_server(server_id)
+        if check:
+            assert_that(server_id, equal_to(server['id']))
+        return server

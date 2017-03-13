@@ -22,6 +22,7 @@ from .clusters import *  # noqa
 from .decapod import *  # noqa
 from .roles import *  # noqa
 from .users import *  # noqa
+from .servers import *  # noqa
 
 __all__ = sorted([  # sort for documentation
     'get_decapod_client',
@@ -41,4 +42,7 @@ __all__ = sorted([  # sort for documentation
     'cluster_steps',
     'create_cluster',
     'cluster',
+
+    'get_server_steps',
+    'server_steps',
 ])
