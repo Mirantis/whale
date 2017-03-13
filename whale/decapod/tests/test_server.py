@@ -52,3 +52,26 @@ def test_update_server(server_steps):
                                new_data={'name': new_name})
     server_steps.update_server(server=server,
                                new_data={'name': origin_name})
+
+
+@pytest.mark.idempotent_id('884f5cda-febe-4043-943e-c8a5da94aa2c')
+def test_get_server(server_steps):
+    """Check that we got server.
+
+    **Steps:**
+
+    #. Get server
+    """
+    server = server_steps.get_servers()[0]
+    server_steps.get_server(server)
+
+
+@pytest.mark.idempotent_id('615471e0-7e04-44b0-802e-c7d4e6c4293a')
+def test_list_servers(server_steps):
+    """Check that we got list of servers.
+
+    **Steps:**
+
+    #. Get list of servers
+    """
+    server_steps.get_servers()
