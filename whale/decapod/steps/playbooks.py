@@ -18,7 +18,7 @@ Playbook steps
 # limitations under the License.
 
 
-from hamcrest import assert_that, is_not, empty  # noqa H301
+from hamcrest import assert_that, empty, equal_to, is_not, none  # noqa H301
 
 from whale import base
 
@@ -47,3 +47,30 @@ class PlaybookSteps(base.BaseSteps):
         if check:
             assert_that(playbooks, is_not(empty()))
         return playbooks
+
+    def get_playbook(self, playbook_id, check=True, **kwargs):
+        """Step to get a playbook by its id.
+
+        Args:
+            playbook_id (str): id of playbook
+            check (bool): flag whether to check step or not
+            **kwargs: any suitable keyword arguments
+
+        Returns:
+            dict: playbook model
+
+        Raises:
+            AssertionError: if check failed
+        """
+        playbooks = self.get_playbooks(**kwargs)
+
+        for playbook in playbooks:
+            if playbook['id'] == playbook_id:
+                break
+        else:
+            playbook = None
+
+        if check:
+            assert_that(playbook, is_not(none()))
+
+        return playbook

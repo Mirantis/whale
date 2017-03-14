@@ -37,6 +37,7 @@ __all__ = sorted([  # sort for documentation
     'playbook_config_steps',
     'create_playbook_config',
     'playbook_config',
+    'cleanup_playbook_configs',
 
     'get_role_steps',
     'role_steps',

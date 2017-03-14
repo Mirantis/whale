@@ -87,11 +87,11 @@ def test_delete_user(role, user_steps, ui_user_steps):
 
     #. Delete role using API
     """
-    user_name = next(utils.generate_ids('user'))
+    user_login = next(utils.generate_ids('user'))
     user = user_steps.create_user(
-        user_name=user_name,
-        full_name=next(utils.generate_ids('full_name')),
-        email=user_name + '@example.com',
+        user_login=user_login,
+        user_full_name=next(utils.generate_ids('full_name')),
+        user_email=user_login + '@example.com',
         role_id=role['id'])
 
     ui_user_steps.delete_user(user['data']['login'])
