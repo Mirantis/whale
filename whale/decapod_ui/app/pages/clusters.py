@@ -25,7 +25,8 @@ from whale.decapod_ui.app import ui as _ui
 
 
 @ui.register_ui(
-    label_name=ui.UI(By.CSS_SELECTOR, "div.name"))
+    label_name=ui.UI(By.CSS_SELECTOR, "div.name"),
+    edit_icon=ui.UI(By.XPATH, './/span[@class="glyphicon edit-icon"]'))
 class RowCluster(ui.Row):
     """Row of cluster."""
 

@@ -30,6 +30,27 @@ def test_create_cluster(ui_cluster_steps, cluster_steps):
     #. Find cluster by name via API
     #. Delete cluster via API
     """
-    cluster = ui_cluster_steps.create_cluster()
-    cluster_id = cluster_steps.get_cluster_id(cluster.name)
+    cluster_name = ui_cluster_steps.create_cluster()
+    cluster_id = cluster_steps.get_cluster_id(cluster_name)
     cluster_steps.delete_cluster(cluster_id)
+
+
+@pytest.mark.idempotent_id('a660cc41-6be4-4bb4-b03d-ccab363a6891')
+def test_update_cluster(cluster, ui_cluster_steps, cluster_steps):
+    """**Scenario:** Cluster may be updated in UI.
+
+    **Setup:**
+
+    #. Create cluster via API
+
+    **Steps:**
+
+    #. Update cluster name via UI
+    #. Find cluster by name via API
+
+    **Teardown:**
+
+    #. Delete cluster via API
+    """
+    cluster_name = ui_cluster_steps.update_cluster(cluster['data']['name'])
+    cluster_steps.get_cluster_id(cluster_name)

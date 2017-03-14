@@ -50,6 +50,9 @@ class ClusterSteps(base.BaseSteps):
             TimeoutExpired|AssertionError: if check failed
         """
         cluster_name = cluster_name or next(utils.generate_ids())
+        # only letters and digits are allowed for cluster name
+        cluster_name = cluster_name.replace('-', '')
+
         cluster = self._client.create_cluster(cluster_name, **kwargs)
 
         if check:

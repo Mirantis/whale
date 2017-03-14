@@ -41,12 +41,15 @@ class ClusterSteps(base.BaseSteps):
             check (bool, optional): flag whether to check step or not
 
         Returns:
-            AttrDict: cluster data
+            str: cluster name
 
         Raises:
             Exception: if cluster is not present on page
         """
         name = name or next(utils.generate_ids())
+        # only letters and digits are allowed for cluster name
+        name = name.replace('-', '')
+
         page = self._clusters_page()
         page.button_create_cluster.click()
         page.form_create_cluster.field_name.value = name
@@ -55,4 +58,35 @@ class ClusterSteps(base.BaseSteps):
         if check:
             page.list_clusters.row(name).wait_for_presence()
 
-        return utils.AttrDict(name=name)
+        return name
+
+    @steps_checker.step
+    def update_cluster(self, name, new_name=None, check=True):
+        """Step to create cluster.
+
+        Args:
+            name (str): name of cluster to be updated
+            new_name (str, optional): name of cluster after update
+            check (bool, optional): flag whether to check step or not
+
+        Returns:
+            str: cluster name
+
+        Raises:
+            Exception: if cluster name was not changed
+        """
+        new_name = new_name or next(utils.generate_ids())
+        # only letters and digits are allowed for cluster name
+        new_name = new_name.replace('-', '')
+
+        page = self._clusters_page()
+        page.list_clusters.row(name).edit_icon.click()
+        page.form_create_cluster.field_name.value = new_name
+
+        page.form_create_cluster.submit(modal_absent=False)
+
+        if check:
+            page.list_clusters.row(name).wait_for_absence()
+            page.list_clusters.row(new_name).wait_for_presence()
+
+        return new_name
