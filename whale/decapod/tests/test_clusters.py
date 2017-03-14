@@ -31,7 +31,7 @@ def test_create_delete_cluster(cluster_steps):
     #. Delete cluster
     """
     cluster = cluster_steps.create_cluster()
-    cluster_steps.delete_cluster(cluster)
+    cluster_steps.delete_cluster(cluster['id'])
 
 
 @pytest.mark.idempotent_id('82ea75ee-240e-43d6-b6f6-3e5ce2576d52')
@@ -50,5 +50,5 @@ def test_update_cluster(cluster_steps, cluster):
 
     #. Delete cluster
     """
-    new_cluster_name = next(utils.generate_ids('cluster'))
-    cluster_steps.update_cluster(cluster, new_cluster_name)
+    new_name = next(utils.generate_ids('cluster'))
+    cluster_steps.update_cluster(cluster, new_data={'name': new_name})

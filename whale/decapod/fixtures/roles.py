@@ -18,10 +18,9 @@ Role fixtures
 # limitations under the License.
 
 import pytest
+from stepler.third_party import utils
 
 from whale.decapod import steps
-
-from stepler.third_party.utils import generate_ids
 
 __all__ = [
     'get_role_steps',
@@ -41,10 +40,10 @@ def get_role_steps(get_decapod_client):
     Returns:
         function: function to get role steps.
     """
-    def _get_steps():
+    def _get_role_steps():
         return steps.RoleSteps(get_decapod_client())
 
-    return _get_steps
+    return _get_role_steps
 
 
 @pytest.fixture
@@ -97,5 +96,5 @@ def role(create_role, role_steps):
         role (dict): model of the role
 
     """
-    return create_role(next(generate_ids('role')),
+    return create_role(next(utils.generate_ids('role')),
                        role_steps.get_permissions())

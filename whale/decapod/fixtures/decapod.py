@@ -39,6 +39,7 @@ def get_decapod_client():
         return decapodclient.V1Client(url=config.DECAPOD_URL,
                                       login=config.DECAPOD_LOGIN,
                                       password=config.DECAPOD_PASSWORD)
+
     return _get_decapod_client
 
 

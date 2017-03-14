@@ -17,12 +17,10 @@ Cluster steps
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from decapodlib import exceptions
-from hamcrest import (assert_that, empty, equal_to, has_properties,
+from hamcrest import (assert_that, empty, equal_to, has_entries,
                       is_not)  # noqa H301
 from stepler.third_party import steps_checker
 from stepler.third_party import utils
-from stepler.third_party import waiter
 
 from whale import base
 
@@ -41,7 +39,7 @@ class ClusterSteps(base.BaseSteps):
         Args:
             cluster_name (str|None): the name of the cluster
             check (bool): flag whether to check step or not
-            **kwargs: any suitable to cluster keyword arguments
+            **kwargs: any suitable keyword arguments
 
         Returns:
             cluster (dict): model of the cluster
@@ -56,49 +54,75 @@ class ClusterSteps(base.BaseSteps):
         cluster = self._client.create_cluster(cluster_name, **kwargs)
 
         if check:
-            self.check_cluster_presence(cluster)
+            self.check_resource_presence(cluster['id'],
+                                         self._client.get_cluster)
             assert_that(cluster['data']['name'], equal_to(cluster_name))
 
         return cluster
 
     @steps_checker.step
-    def update_cluster(self, cluster, cluster_name, check=True, **kwargs):
+    def update_cluster(self, cluster, new_data, check=True, **kwargs):
         """Step to update cluster.
 
         Args:
             cluster (dict|str): cluster dict or id
-            cluster_name (str): new name of the cluster
+            new_data (dict): new data for the cluster
             check (bool): flag whether to check step or not
-            **kwargs: any suitable to cluster keyword arguments
+            **kwargs: any suitable keyword arguments
 
         Raises:
             AssertionError: if check failed
         """
-        cluster_id = self.get_id(cluster)
-        model_data = self.get_cluster(cluster_id)
-        model_data['data']['name'] = cluster_name
+        if not isinstance(cluster, dict):
+            cluster = self.get_cluster(cluster)
 
-        cluster = self._client.update_cluster(model_data, **kwargs)
+        cluster['data'].update(new_data)
+
+        cluster = self._client.update_cluster(cluster, **kwargs)
 
         if check:
-            assert_that(cluster['data']['name'], equal_to(cluster_name))
+            assert_that(cluster['data'], has_entries(new_data))
+
+        return cluster
 
     @steps_checker.step
-    def delete_cluster(self, cluster, check=True, **kwargs):
+    def delete_cluster(self, cluster_id, check=True, **kwargs):
         """Step to delete cluster.
 
         Args:
-            cluster (dict|str): cluster dict or id
+            cluster_id (str): cluster id
             check (bool): flag whether to check step or not
-            **kwargs: any suitable to cluster keyword arguments
+            **kwargs: any suitable keyword arguments
 
         Raises:
             TimeoutExpired: if check failed
         """
-        cluster_id = self.get_id(cluster)
         self._client.delete_cluster(cluster_id, **kwargs)
+
         if check:
-            self.check_cluster_presence(cluster, must_present=False)
+            self.check_resource_presence(cluster_id, self._client.get_cluster,
+                                         must_present=False)
+
+    @steps_checker.step
+    def get_clusters(self, check=True, **kwargs):
+        """Step to retrieve clusters.
+
+        Args:
+            check (bool): flag whether to check step or not
+            **kwargs: any suitable keyword arguments
+
+        Returns:
+            clusters (list): list of clusters
+
+        Raises:
+            AssertionError: if check failed
+        """
+        clusters = self._client.get_clusters(**kwargs)['items']
+
+        if check:
+            assert_that(clusters, is_not(empty()))
+
+        return clusters
 
     @steps_checker.step
     def get_cluster(self, cluster_id, check=True, **kwargs):
@@ -107,7 +131,7 @@ class ClusterSteps(base.BaseSteps):
         Args:
             cluster_id (str): cluster id
             check (bool): flag whether to check step or not
-            **kwargs: any suitable to cluster keyword arguments
+            **kwargs: any suitable keyword arguments
 
         Returns:
             cluster (dict): model of the cluster
@@ -115,62 +139,26 @@ class ClusterSteps(base.BaseSteps):
         Raises:
             AssertionError: if check failed
         """
-        cluster = self._client.get_cluster(cluster_id=cluster_id, **kwargs)
+        cluster = self._client.get_cluster(cluster_id, **kwargs)
+
         if check:
-            assert_that(cluster, has_properties(**kwargs))
+            assert_that(cluster['id'], equal_to(cluster_id))
 
         return cluster
 
     @steps_checker.step
-    def get_cluster_id(self, cluster_name, check=True, **kwargs):
-        """Step to retrieve cluster id.
+    def get_cluster_by_name(self, cluster_name, check=True):
+        """Step to retrieve cluster by name.
 
         Args:
             cluster_name (str): cluster name
             check (bool): flag whether to check step or not
-            **kwargs: any suitable to cluster keyword arguments
 
         Returns:
-            cluster_id (str): cluster id
+            cluster (dict): model of cluster
 
         Raises:
             AssertionError: if check failed
         """
-        clusters = self._client.get_clusters(**kwargs)
-        for cluster in clusters['items']:
-            if cluster['data']['name'] == cluster_name:
-                cluster_id = cluster['id']
-
-        if check:
-            assert_that(cluster_id, is_not(empty()))
-
-        return cluster_id
-
-    @steps_checker.step
-    def check_cluster_presence(self, cluster, must_present=True, timeout=0):
-        """Check step that cluster is present.
-
-        Args:
-            cluster (dict|str): the cluster to be checked on the server
-            must_present (bool): flag whether cluster should present or no
-            timeout (int): seconds to wait a result of check
-
-        Raises:
-            TimeoutExpired/DecapodAPIError: if check failed after timeout or
-            API response exception
-        """
-        cluster_id = self.get_id(cluster)
-
-        def _check_cluster_presence():
-            try:
-                cluster = self.get_cluster(cluster_id)
-                if cluster['time_deleted'] == 0:
-                    is_present = True
-                else:
-                    is_present = False
-            except exceptions.DecapodAPIError:
-                is_present = False
-
-            return waiter.expect_that(is_present, equal_to(must_present))
-
-        waiter.wait(_check_cluster_presence, timeout_seconds=timeout)
+        return self.get_resource_by_field(
+            cluster_name, self.get_clusters, check=check)

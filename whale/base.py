@@ -17,7 +17,10 @@ Base
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from decapodlib import exceptions
+from hamcrest import assert_that, empty, equal_to, is_not, none  # noqa H301
 from stepler import base
+from stepler.third_party import waiter
 
 
 class BaseSteps(base.BaseSteps):
@@ -51,3 +54,58 @@ class BaseSteps(base.BaseSteps):
             return obj.id
 
         return obj
+
+    @staticmethod
+    def get_resource_by_field(field_value, getter, field_name='name',
+                              check=True):
+        """Step to retrieve resource by field.
+
+        Args:
+            field_value (str): field value that is used to identify resource
+            getter (obj): method to get resources
+            field_name (str): field name that is used to identify resource
+            check (bool): flag whether to check step or not
+
+        Returns:
+            resource (dict): model of resource
+
+        Raises:
+            AssertionError: if check failed
+        """
+        for resource in getter():
+            if resource['data'][field_name] == field_value:
+                break
+        else:
+            resource = None
+
+        if check:
+            assert_that(resource, is_not(none()))
+
+        return resource
+
+    @staticmethod
+    def check_resource_presence(resource_id, getter, must_present=True,
+                                timeout=0):
+        """Step to check that resource is present.
+
+        Args:
+            resource_id (str): resource id
+            getter (obj): method to get resource
+            must_present (bool): flag whether resource should be present or not
+            timeout (int): seconds to wait a result of check
+
+        Raises:
+            TimeoutExpired: if check failed after timeout
+                exception
+        """
+        def _check_resource_presence():
+            try:
+                resource = getter(resource_id)
+            except exceptions.DecapodAPIError:
+                is_present = False
+            else:
+                is_present = True if resource['time_deleted'] == 0 else False
+
+            return waiter.expect_that(is_present, equal_to(must_present))
+
+        waiter.wait(_check_resource_presence, timeout_seconds=timeout)

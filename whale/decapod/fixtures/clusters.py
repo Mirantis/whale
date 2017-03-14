@@ -81,7 +81,7 @@ def create_cluster(cluster_steps):
     yield _create_cluster
 
     for cluster in clusters:
-        cluster_steps.delete_cluster(cluster)
+        cluster_steps.delete_cluster(cluster['id'])
 
 
 @pytest.fixture

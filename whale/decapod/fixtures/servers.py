@@ -37,10 +37,10 @@ def get_server_steps(get_decapod_client):
     Returns:
         function: function to get servers steps.
     """
-    def _get_steps():
+    def _get_server_steps():
         return steps.ServerSteps(get_decapod_client())
 
-    return _get_steps
+    return _get_server_steps
 
 
 @pytest.fixture

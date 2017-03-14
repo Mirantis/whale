@@ -31,7 +31,7 @@ def test_create_cluster(ui_cluster_steps, cluster_steps):
     #. Delete cluster via API
     """
     cluster_name = ui_cluster_steps.create_cluster()
-    cluster_id = cluster_steps.get_cluster_id(cluster_name)
+    cluster_id = cluster_steps.get_cluster_by_name(cluster_name)['id']
     cluster_steps.delete_cluster(cluster_id)
 
 
@@ -53,4 +53,4 @@ def test_update_cluster(cluster, ui_cluster_steps, cluster_steps):
     #. Delete cluster via API
     """
     cluster_name = ui_cluster_steps.update_cluster(cluster['data']['name'])
-    cluster_steps.get_cluster_id(cluster_name)
+    cluster_steps.get_cluster_by_name(cluster_name)

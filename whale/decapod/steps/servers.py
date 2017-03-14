@@ -17,11 +17,9 @@ Servers steps
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from decapodlib import exceptions
-from hamcrest import (assert_that, equal_to, is_not, empty,
-                      has_entries)  # noqa H301
+from hamcrest import (assert_that, empty, equal_to, has_entries,
+                      is_not)  # noqa H301
 from stepler.third_party import steps_checker
-from stepler.third_party import waiter
 
 from whale import base
 
@@ -34,88 +32,64 @@ class ServerSteps(base.BaseSteps):
     """Server steps."""
 
     @steps_checker.step
-    def create_server(self, server_id, host, username, check=True, **kwargs):
+    def create_server(self, server_id, server_ip, username, check=True,
+                      **kwargs):
         """Step to create new server.
 
-            Args:
-                server_id (str): server id
-                host (str): hostname or IP of the server
-                username (str): name of the user for Ansible on this server
-                check (bool): flag whether to check step or not
-                **kwargs: any other attribute provided will be passed to server
+        Args:
+            server_id (str): server id
+            server_ip (str): server ip
+            username (str): name of the user for Ansible on this server
+            check (bool): flag whether to check step or not
+            **kwargs: any suitable keyword arguments
 
-            Returns:
-                json: model of new server
+        Returns:
+            server (dict): model of new server
 
-            Raises:
-                TimeoutExpired|AssertionError: if check was
-                triggered to an error
+        Raises:
+            TimeoutExpired|AssertionError: if check was triggered to an error
         """
+        # self._client.create_server method returns empty dict ({}).
         server = self._client.create_server(server_id=server_id,
-                                            host=host,
+                                            host=server_ip,
                                             username=username,
                                             **kwargs)
+
         if check:
-            self.check_server_presence(server_id)
+            self.check_resource_presence(server_id, self._client.get_server,
+                                         timeout=60)
             server = self.get_server(server_id)
-            assert_that(server_id, equal_to(server['id']))
-            assert_that(host, equal_to(server['data']['ip']))
-            assert_that(username, equal_to(server['data']['username']))
-        return server
+            assert_that(server['id'], equal_to(server_id))
+            assert_that(server['data']['ip'], equal_to(server_ip))
+            assert_that(server['data']['username'], equal_to(username))
+
+        return server or self.get_server(server_id)
 
     @steps_checker.step
-    def delete_server(self, server, check=True, **kwargs):
+    def delete_server(self, server_id, check=True, **kwargs):
         """Step to delete server.
 
         Args:
-            decapod_server_id (str): decapod server id
+            server_id (str): server id
             check (bool): flag whether to check step or not
-            **kwargs: any other attribute provided will be passed to server
+            **kwargs: any suitable keyword arguments
 
         Raises:
             TimeoutExpired: if check failed
         """
-        server_id = self.get_id(server)
         self._client.delete_server(server_id, **kwargs)
+
         if check:
-            self.check_server_presence(server_id, must_present=False)
+            self.check_resource_presence(server_id, self._client.get_server,
+                                         must_present=False, timeout=60)
 
     @steps_checker.step
-    def check_server_presence(self,
-                              server_id,
-                              must_present=True,
-                              timeout=60):
-        """Step to check server presence.
-
-        Args:
-            server_id (str): decapod server id
-            must_present (bool): flag whether server should present or not
-            timeout (int): seconds to wait a result of check
-
-        Raises:
-            TimeoutExpired: if check failed after timeout
-        """
-
-        def _check_server_presence():
-            try:
-                server = self._client.get_server(server_id)
-                if server['time_deleted'] == 0:
-                    is_present = True
-                else:
-                    is_present = False
-            except exceptions.DecapodAPIError:
-                is_present = False
-
-            return waiter.expect_that(is_present, equal_to(must_present))
-
-        waiter.wait(_check_server_presence, timeout_seconds=timeout)
-
-    @steps_checker.step
-    def get_servers(self, check=True):
+    def get_servers(self, check=True, **kwargs):
         """Step to get servers.
 
         Args:
-            check (bool, optional): flag whether to check step or not
+            check (bool): flag whether to check step or not
+            **kwargs: any suitable keyword arguments
 
         Returns:
             servers (list): list of servers
@@ -123,42 +97,49 @@ class ServerSteps(base.BaseSteps):
         Raises:
             AssertionError: if check failed
         """
-        servers = self._client.get_servers()['items']
+        servers = self._client.get_servers(**kwargs)['items']
+
         if check:
             assert_that(servers, is_not(empty()))
+
         return servers
 
     @steps_checker.step
-    def update_server(self, server, new_data, check=True):
+    def update_server(self, server, new_data, check=True, **kwargs):
         """Step to update server.
 
         Args:
             server (dict|str): server or its ID
             new_data (dict): new data for server
-            check (bool, optional): flag whether to check step or not
+            check (bool): flag whether to check step or not
+            **kwargs: any suitable keyword arguments
 
         Returns:
-            server(dict): dict of updated server
+            server (dict): dict of updated server
 
         Raises:
             AssertionError: if check failed
         """
-        server_id = self.get_id(server)
-        server = self.get_server(server_id)
-        server['data'].update(new_data)
-        self._client.put_server(server)
-        if check:
+        if not isinstance(server, dict):
             server = self.get_server(server)
+
+        server['data'].update(new_data)
+
+        server = self._client.put_server(server, **kwargs)
+
+        if check:
             assert_that(server['data'], has_entries(new_data))
+
         return server
 
     @steps_checker.step
-    def get_server(self, server, check=True):
+    def get_server(self, server_id, check=True, **kwargs):
         """Step to get server.
 
         Args:
-            server (dict|str): server or its ID
-            check (bool, optional): flag whether to check step or not
+            server_id (str): server id
+            check (bool): flag whether to check step or not
+            **kwargs: any suitable keyword arguments
 
         Returns:
             server (dict): dict of server
@@ -166,8 +147,9 @@ class ServerSteps(base.BaseSteps):
         Raises:
             AssertionError: if check failed
         """
-        server_id = self.get_id(server)
-        server = self._client.get_server(server_id)
+        server = self._client.get_server(server_id, **kwargs)
+
         if check:
-            assert_that(server_id, equal_to(server['id']))
+            assert_that(server['id'], equal_to(server_id))
+
         return server

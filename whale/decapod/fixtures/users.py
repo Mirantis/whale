@@ -18,7 +18,6 @@ User fixtures
 # limitations under the License.
 
 import pytest
-
 from stepler.third_party import utils
 
 from whale.decapod import steps
@@ -42,10 +41,10 @@ def get_user_steps(get_decapod_client):
     Returns:
         function: function to get users steps.
     """
-    def _get_steps():
+    def _get_user_steps():
         return steps.UserSteps(get_decapod_client())
 
-    return _get_steps
+    return _get_user_steps
 
 
 @pytest.fixture
@@ -64,6 +63,7 @@ def user_steps(get_user_steps, cleanup_users):
     users_ids_before = {user['id'] for user in users}
 
     yield _user_steps
+
     cleanup_users(_user_steps, uncleanable_ids=users_ids_before)
 
 
@@ -105,10 +105,10 @@ def user(role, create_user):
     Returns:
         json model: model of new user
     """
-    user_name = next(utils.generate_ids('user'))
-    return create_user(user_name=user_name,
-                       full_name=next(utils.generate_ids('full_name')),
-                       email='{0}@example.com'.format(user_name),
+    user_login = next(utils.generate_ids('user'))
+    return create_user(user_login=user_login,
+                       user_email=user_login + '@example.com',
+                       user_full_name=next(utils.generate_ids('full_name')),
                        role_id=role['id'])
 
 

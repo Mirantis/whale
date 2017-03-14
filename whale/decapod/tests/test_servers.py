@@ -33,7 +33,7 @@ def test_delete_create_server(server_steps):
     server = server_steps.get_servers()[0]
     server_steps.delete_server(server['id'])
     server_steps.create_server(server_id=server['id'],
-                               host=server['data']['ip'],
+                               server_ip=server['data']['ip'],
                                username=server['data']['username'])
 
 
@@ -47,11 +47,9 @@ def test_update_server(server_steps):
     """
     server = server_steps.get_servers()[0]
     origin_name = server['data']['name']
-    new_name = next(utils.generate_ids())
-    server_steps.update_server(server=server,
-                               new_data={'name': new_name})
-    server_steps.update_server(server=server,
-                               new_data={'name': origin_name})
+    new_name = next(utils.generate_ids('server'))
+    server = server_steps.update_server(server, new_data={'name': new_name})
+    server_steps.update_server(server, new_data={'name': origin_name})
 
 
 @pytest.mark.idempotent_id('884f5cda-febe-4043-943e-c8a5da94aa2c')
@@ -63,7 +61,7 @@ def test_get_server(server_steps):
     #. Get server
     """
     server = server_steps.get_servers()[0]
-    server_steps.get_server(server)
+    server_steps.get_server(server['id'])
 
 
 @pytest.mark.idempotent_id('615471e0-7e04-44b0-802e-c7d4e6c4293a')
