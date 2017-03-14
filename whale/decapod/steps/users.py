@@ -18,7 +18,7 @@ User steps
 # limitations under the License.
 
 from decapodlib import exceptions
-from hamcrest import assert_that, equal_to  # noqa H301
+from hamcrest import assert_that, empty, equal_to, is_not  # noqa H301
 from stepler.third_party import steps_checker
 from stepler.third_party import waiter
 
@@ -85,6 +85,51 @@ class UserSteps(base.BaseSteps):
         self._client.delete_user(user_id, **kwargs)
         if check:
             self.check_user_presence(user_id, must_present=False)
+
+    @steps_checker.step
+    def get_users(self, check=True):
+        """Step to get users.
+
+        Args:
+            check (bool): flag whether to check step or not
+
+        Returns:
+            list: list of dicts of existing users
+
+        Raises:
+            AssertionError: if check failed
+        """
+        users = self._client.get_users()
+        if check:
+            assert_that(users['items'], is_not(empty()))
+
+        return users['items']
+
+    @steps_checker.step
+    def get_user_id(self, user_login, check=True):
+        """Step to retrieve cluster id.
+
+        Args:
+            user_name (str): user name
+            check (bool): flag whether to check step or not
+
+        Returns:
+            user_id (str): user id
+
+        Raises:
+            AssertionError: if check failed
+        """
+        user_id = None
+        users = self.get_users()
+        for user in users:
+            if user['data']['login'] == user_login:
+                user_id = user['id']
+                break
+
+        if check:
+            assert_that(user_id, is_not(empty()))
+
+        return user_id
 
     @steps_checker.step
     def check_user_presence(self, user_id, must_present=True, timeout=0):
