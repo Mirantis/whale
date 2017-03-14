@@ -33,7 +33,7 @@ def test_delete_create_server(server_steps):
     server = server_steps.get_servers()[0]
     server_steps.delete_server(server['id'])
     server_steps.create_server(server_id=server['id'],
-                               host=server['data']['name'],
+                               host=server['data']['ip'],
                                username=server['data']['username'])
 
 

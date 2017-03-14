@@ -39,7 +39,7 @@ class ServerSteps(base.BaseSteps):
 
             Args:
                 server_id (str): server id
-                host (str): hostname of the server
+                host (str): hostname or IP of the server
                 username (str): name of the user for Ansible on this server
                 check (bool): flag whether to check step or not
                 **kwargs: any other attribute provided will be passed to server
@@ -59,7 +59,7 @@ class ServerSteps(base.BaseSteps):
             self.check_server_presence(server_id)
             server = self.get_server(server_id)
             assert_that(server_id, equal_to(server['id']))
-            assert_that(host, equal_to(server['data']['name']))
+            assert_that(host, equal_to(server['data']['ip']))
             assert_that(username, equal_to(server['data']['username']))
         return server
 
