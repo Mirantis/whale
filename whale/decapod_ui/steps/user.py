@@ -97,7 +97,7 @@ class UserSteps(base.BaseSteps):
         page_users = self._page_users()
         page_users.list_users.row(login).maximize_icon.click()
 
-        with page_users.user_details as form:
+        with page_users.form_user_details as form:
             form.field_login.value = new_login
             form.field_full_name.value = new_full_name
             form.field_email.value = new_email
@@ -113,7 +113,7 @@ class UserSteps(base.BaseSteps):
             page_users.list_users.row(new_login).wait_for_presence()
 
             page_users.list_users.row(new_login).maximize_icon.click()
-            with page_users.user_details as form:
+            with page_users.form_user_details as form:
                 assert_that(form.field_login.value, equal_to(new_login))
                 assert_that(form.field_full_name.value,
                             equal_to(new_full_name))
@@ -123,3 +123,23 @@ class UserSteps(base.BaseSteps):
                                 equal_to(new_role_name))
 
         return new_login
+
+    @steps_checker.step
+    def delete_user(self, login, check=True):
+        """Step to delete user.
+
+        Args:
+            login (str): login of user to be deleted
+            check (bool, optional): flag whether to check step or not
+
+        Raises:
+            Exception: if user is present on page
+        """
+        page_users = self._page_users()
+        page_users.list_users.row(login).maximize_icon.click()
+
+        page_users.form_user_details.cancel(modal_absent=False)
+        page_users.form_confirm_user_deletion.submit(modal_absent=False)
+
+        if check:
+            page_users.list_users.row(login).wait_for_absence()

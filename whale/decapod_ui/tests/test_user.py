@@ -68,3 +68,30 @@ def test_update_user(user, role_steps, create_role, user_steps, ui_user_steps):
     user_login = ui_user_steps.update_user(
         user['data']['login'], new_role_name=new_role['data']['name'])
     user_steps.get_user_by_login(user_login)
+
+
+@pytest.mark.idempotent_id('0cbf2e4c-c526-4b6b-b3cb-7b0fbe903ff9')
+def test_delete_user(role, user_steps, ui_user_steps):
+    """**Scenario:** User may be deleted in UI.
+
+    **Setup:**
+
+    #. Create role using API
+
+    **Steps:**
+
+    #. Create user via API
+    #. Delete user via UI
+
+    **Teardown:**
+
+    #. Delete role using API
+    """
+    user_name = next(utils.generate_ids('user'))
+    user = user_steps.create_user(
+        user_name=user_name,
+        full_name=next(utils.generate_ids('full_name')),
+        email=user_name + '@example.com',
+        role_id=role['id'])
+
+    ui_user_steps.delete_user(user['data']['login'])
