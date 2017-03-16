@@ -59,7 +59,7 @@ def role_steps(get_role_steps):
     return get_role_steps()
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def create_role(role_steps):
     """Callable fixture to create role with options.
 
@@ -86,15 +86,13 @@ def create_role(role_steps):
 
 
 @pytest.fixture
-def role(create_role, role_steps):
+def role(create_role):
     """Fixture to create role with default options before test.
 
     Args:
         create_role (function): function to create role with options
-        role_steps (object): instantiated role steps
     Returns:
         role (dict): model of the role
 
     """
-    return create_role(next(utils.generate_ids('role')),
-                       role_steps.get_permissions())
+    return create_role()
