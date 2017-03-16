@@ -46,7 +46,7 @@ class UserSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            user (dict): model of new user
+            dict: model of new user
 
         Raises:
             TimeoutExpired|AssertionError: if check was triggered to an error
@@ -81,7 +81,7 @@ class UserSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            user (dict): user model
+            dict: updated user model
 
         Raises:
             AssertionError: if check was triggered to an error
@@ -104,7 +104,7 @@ class UserSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            user(dict): user model
+            dict: user model
 
         Raises:
             AssertionError: if check was triggered to an error
@@ -138,7 +138,7 @@ class UserSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            users (list): list of dicts of existing users
+            list: list of existing users
 
         Raises:
             AssertionError: if check failed
@@ -159,7 +159,7 @@ class UserSteps(base.BaseSteps):
             check (bool): flag whether to check step or not
 
         Returns:
-            user (dict): model of user
+            dict: model of user
 
         Raises:
             AssertionError: if check failed

@@ -56,7 +56,7 @@ def user_steps(get_user_steps, cleanup_users):
         cleanup_users (function): function to cleanup users after test
 
     Yields:
-        user_steps (object): instantiated user steps
+        object: instantiated user steps
     """
     _user_steps = get_user_steps()
     users = _user_steps.get_users(check=False)
@@ -79,7 +79,6 @@ def create_user(user_steps):
 
     Yields:
         function: function to create user with options
-
     """
     users = []
 
@@ -103,7 +102,7 @@ def user(role, create_user):
         create_user (function): function to create user with options
 
     Returns:
-        json model: model of new user
+        dict: model of new user
     """
     user_login = next(utils.generate_ids('user'))
     return create_user(user_login=user_login,

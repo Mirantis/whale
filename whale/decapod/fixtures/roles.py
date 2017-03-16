@@ -91,8 +91,9 @@ def role(create_role):
 
     Args:
         create_role (function): function to create role with options
+
     Returns:
-        role (dict): model of the role
+        dict: model of the role
 
     """
     return create_role()

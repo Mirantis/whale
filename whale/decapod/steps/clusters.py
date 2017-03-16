@@ -42,7 +42,7 @@ class ClusterSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            cluster (dict): model of the cluster
+            dict: model of the cluster
 
         Raises:
             TimeoutExpired|AssertionError: if check failed
@@ -69,6 +69,9 @@ class ClusterSteps(base.BaseSteps):
             new_data (dict): new data for the cluster
             check (bool): flag whether to check step or not
             **kwargs: any suitable keyword arguments
+
+        Returns:
+            dict: model of the updated cluster
 
         Raises:
             AssertionError: if check failed
@@ -112,7 +115,7 @@ class ClusterSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            clusters (list): list of clusters
+            list: list of clusters
 
         Raises:
             AssertionError: if check failed
@@ -134,7 +137,7 @@ class ClusterSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            cluster (dict): model of the cluster
+            dict: model of the cluster
 
         Raises:
             AssertionError: if check failed
@@ -155,7 +158,7 @@ class ClusterSteps(base.BaseSteps):
             check (bool): flag whether to check step or not
 
         Returns:
-            cluster (dict): model of cluster
+            dict: model of cluster
 
         Raises:
             AssertionError: if check failed

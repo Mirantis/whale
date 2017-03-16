@@ -92,6 +92,6 @@ def cluster(create_cluster):
         create_cluster (function): function to create cluster with options
 
     Returns:
-        cluster (dict): model of the cluster
+        dict: model of the cluster
     """
     return create_cluster()

@@ -44,7 +44,7 @@ class RoleSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            role (dict): model of the role
+            dict: model of the role
 
         Raises:
             TimeoutExpired: if check failed after timeout
@@ -73,7 +73,7 @@ class RoleSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            role (dict): model of new role
+            dict: model of updated role
 
         Raises:
             AssertionError: if check failed
@@ -118,7 +118,7 @@ class RoleSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            role (dict): model of the role
+            dict: model of the role
         """
         role = self._client.get_role(role_id, **kwargs)
 
@@ -136,7 +136,7 @@ class RoleSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            roles (list): list of roles
+            list: list of roles
 
         Raises:
             AssertionError: if check was triggered to an error
@@ -157,7 +157,7 @@ class RoleSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            permissions (list):  a list of permissions
+            list: a list of permissions
         """
         permissions = self._client.get_permissions(**kwargs)['items']
 

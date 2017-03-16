@@ -44,7 +44,7 @@ class ServerSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            server (dict): model of new server
+            dict: model of new server
 
         Raises:
             TimeoutExpired|AssertionError: if check was triggered to an error
@@ -92,7 +92,7 @@ class ServerSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            servers (list): list of servers
+            list: list of servers
 
         Raises:
             AssertionError: if check failed
@@ -115,7 +115,7 @@ class ServerSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            server (dict): dict of updated server
+            dict: model of updated server
 
         Raises:
             AssertionError: if check failed
@@ -142,7 +142,7 @@ class ServerSteps(base.BaseSteps):
             **kwargs: any suitable keyword arguments
 
         Returns:
-            server (dict): dict of server
+            dict: model of server
 
         Raises:
             AssertionError: if check failed
