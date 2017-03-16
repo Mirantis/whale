@@ -60,12 +60,22 @@ class FormUserDetails(FormCreateUser):
     cancel_locator = By.CSS_SELECTOR, 'button.btn.btn-danger'
 
 
+class FormConfirmUserDeletion(_ui.Form):
+    """Form to submit user deletion."""
+
+    submit_locator = By.CSS_SELECTOR, 'button.btn.btn-primary'
+    cancel_locator = By.CSS_SELECTOR, 'button.btn.btn-default'
+
+
 @ui.register_ui(
     button_create_user=ui.Button(
         By.CSS_SELECTOR, "div.main-button > button.btn-primary"),
     form_create_user=FormCreateUser(By.CSS_SELECTOR, "div.modal-content"),
     list_users=ListUsers(By.CSS_SELECTOR, "div.col-xs-12"),
-    user_details=FormUserDetails(By.CSS_SELECTOR, "div.box.open"))
+    form_user_details=FormUserDetails(By.CSS_SELECTOR, "div.box.open"),
+    form_confirm_user_deletion=FormConfirmUserDeletion(
+        By.XPATH,
+        './/div[@class="modal-content" and contains(.//*, "Delete user")]'))
 class PageUsers(base.PageBase):
     """Page for users."""
 
