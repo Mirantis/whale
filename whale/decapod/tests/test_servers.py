@@ -23,7 +23,7 @@ from stepler.third_party import utils
 
 @pytest.mark.idempotent_id('d7f68921-3b16-4c16-91ce-224ab8da03e0')
 def test_delete_create_server(server_steps):
-    """Check that server was deleted and created.
+    """**Scenario:** Check that server was deleted and created.
 
     **Steps:**
 
@@ -39,7 +39,7 @@ def test_delete_create_server(server_steps):
 
 @pytest.mark.idempotent_id('7474c3c8-e63c-4294-a27a-cc8c82200bd2')
 def test_update_server(server_steps):
-    """Check that server was updated.
+    """**Scenario:** Check that server was updated.
 
     **Steps:**
 
@@ -54,7 +54,7 @@ def test_update_server(server_steps):
 
 @pytest.mark.idempotent_id('884f5cda-febe-4043-943e-c8a5da94aa2c')
 def test_get_server(server_steps):
-    """Check that we got server.
+    """**Scenario:** Check that we got server.
 
     **Steps:**
 
@@ -66,7 +66,7 @@ def test_get_server(server_steps):
 
 @pytest.mark.idempotent_id('615471e0-7e04-44b0-802e-c7d4e6c4293a')
 def test_list_servers(server_steps):
-    """Check that we got list of servers.
+    """**Scenario:** Check that we got list of servers.
 
     **Steps:**
 
