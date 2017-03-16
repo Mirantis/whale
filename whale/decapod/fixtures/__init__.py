@@ -20,6 +20,8 @@ Decapod fixtures
 
 from .clusters import *  # noqa
 from .decapod import *  # noqa
+from .playbooks import *  # noqa
+from .playbooks_config import *  # noqa
 from .roles import *  # noqa
 from .users import *  # noqa
 from .servers import *  # noqa
@@ -27,6 +29,14 @@ from .servers import *  # noqa
 __all__ = sorted([  # sort for documentation
     'get_decapod_client',
     'decapod_client',
+
+    'get_playbook_steps',
+    'playbook_steps',
+
+    'get_playbook_config_steps',
+    'playbook_config_steps',
+    'create_playbook_config',
+    'playbook_config',
 
     'get_role_steps',
     'role_steps',

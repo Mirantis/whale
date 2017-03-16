@@ -1,7 +1,7 @@
 """
----------------
-Execution steps
----------------
+--------------
+Playbook tests
+--------------
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,3 +16,16 @@ Execution steps
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+import pytest
+
+
+@pytest.mark.idempotent_id('bcf02346-e785-47c9-9750-1028471ac27e')
+def test_list_playbooks(playbook_steps):
+    """**Scenario:** Get list of all playbooks.
+
+    **Steps:**
+
+    #. Get all playbooks
+    """
+    playbook_steps.get_playbooks()

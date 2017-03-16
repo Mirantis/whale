@@ -133,6 +133,21 @@ class ServerSteps(base.BaseSteps):
         return server
 
     @steps_checker.step
+    def get_server_ids(self, check=True):
+        """Step to get ids of all servers.
+
+        Args:
+            check (bool, optional): flag whether to check step or not
+
+        Returns:
+            list: all server ids
+        """
+        server_ids = [s['id'] for s in self.get_servers(check=check)]
+        if check:
+            assert_that(server_ids, is_not(empty()))
+        return server_ids
+
+    @steps_checker.step
     def get_server(self, server_id, check=True, **kwargs):
         """Step to get server.
 
