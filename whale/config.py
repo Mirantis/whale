@@ -46,7 +46,6 @@ VIRTUAL_DISPLAY = os.environ.get('VIRTUAL_DISPLAY')
 # it raises exception:
 # `WebDriverException: Message: can't access dead object`.
 # Workaround: add WebDriverException to pom PRESENCE_ERRORS.
-base.PRESENCE_ERRORS = tuple(list(base.PRESENCE_ERRORS) +
-                             [exceptions.WebDriverException])
+base.PRESENCE_ERRORS += (exceptions.WebDriverException, )
 
 PLAYBOOK_DEPLOY_CLUSTER = 'cluster_deploy'

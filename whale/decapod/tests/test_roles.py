@@ -82,3 +82,14 @@ def test_list_roles(role_steps):
     #. List all roles
     """
     role_steps.get_roles()
+
+
+@pytest.mark.idempotent_id('ca697d9a-0dd4-4c3d-8a9c-0c1225b194fd')
+def test_list_permissions(role_steps):
+    """**Scenario:** Check getting all role permissions.
+
+    **Steps:**
+
+    #. List all role permissions
+    """
+    role_steps.get_permissions()
