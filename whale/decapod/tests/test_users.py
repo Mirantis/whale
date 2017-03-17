@@ -25,7 +25,7 @@ from stepler.third_party import utils
 def test_create_delete_user(user_steps):
     """**Scenario:** Check user creation and deletion.
 
-    **Setup:**
+    **Steps:**
 
     #. Create user
     #. Delete user
@@ -44,7 +44,7 @@ def test_update_user(user, user_steps):
 
     **Steps:**
 
-    #. Update user with new name
+    #. Update user with new login, email and full name
 
     **Teardown:**
 
@@ -76,7 +76,7 @@ def test_get_user(user, user_steps):
 
 
 @pytest.mark.idempotent_id('a5d6e791-6f9e-4405-ae50-e38c32a80968')
-def test_list_user(user_steps):
+def test_list_users(user_steps):
     """Scenario:** Check getting of all users.
 
     **Steps:**

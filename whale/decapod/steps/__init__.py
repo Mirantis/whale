@@ -20,7 +20,7 @@ Decapod steps
 
 from .clusters import *  # noqa
 from .playbooks import *  # noqa
-from .playbooks_config import *  # noqa
+from .playbook_configs import *  # noqa
 from .roles import *  # noqa
 from .users import *  # noqa
 from .servers import *  # noqa

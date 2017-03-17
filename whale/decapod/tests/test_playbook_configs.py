@@ -37,6 +37,10 @@ def test_create_delete_playbook_config(playbook_config_steps, cluster,
     #. Get list of all servers
     #. Create playbook configuration
     #. Delete playbook configuration
+
+    **Teardown:**
+
+    #. Delete cluster
     """
     server_ids = server_steps.get_server_ids()
     playbook_id = config.PLAYBOOK_DEPLOY_CLUSTER
