@@ -27,7 +27,6 @@ from whale.decapod_ui.app import ui as _ui
 @ui.register_ui(
     link_clusters=ui.Link(By.CSS_SELECTOR, 'a[href="/clusters"]'),
     link_configurations=ui.Link(By.CSS_SELECTOR, 'a[href="/configurations"]'),
-    link_executions=ui.Link(By.CSS_SELECTOR, 'a[href="/executions"]'),
     link_users_management=ui.Link(By.CSS_SELECTOR, 'a[href="/admin"]'))
 class Header(ui.Block):
     """Header block."""

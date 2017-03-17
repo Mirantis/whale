@@ -19,6 +19,7 @@ Decapod steps
 
 
 from .clusters import *  # noqa
+from .executions import *  # noqa
 from .playbooks import *  # noqa
 from .playbook_configs import *  # noqa
 from .roles import *  # noqa
@@ -27,6 +28,7 @@ from .servers import *  # noqa
 
 __all__ = [
     'ClusterSteps',
+    'ExecutionSteps',
     'PlaybookSteps',
     'PlaybookConfigSteps',
     'RoleSteps',
