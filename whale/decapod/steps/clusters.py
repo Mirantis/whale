@@ -54,8 +54,7 @@ class ClusterSteps(base.BaseSteps):
         cluster = self._client.create_cluster(cluster_name, **kwargs)
 
         if check:
-            self.check_resource_presence(cluster['id'],
-                                         self._client.get_cluster)
+            self.check_cluster_presence(cluster['id'])
             assert_that(cluster['data']['name'], equal_to(cluster_name))
 
         return cluster
@@ -103,8 +102,23 @@ class ClusterSteps(base.BaseSteps):
         self._client.delete_cluster(cluster_id, **kwargs)
 
         if check:
-            self.check_resource_presence(cluster_id, self._client.get_cluster,
-                                         must_present=False)
+            self.check_cluster_presence(cluster_id, must_present=False)
+
+    @steps_checker.step
+    def check_cluster_presence(self, cluster_id, must_present=True):
+        """Step to check cluster presence.
+
+        Args:
+            cluster_id (str): cluster id
+            must_present (bool, optional): flag whether cluster must be
+                present or no
+
+        Raises:
+            AssertionError: if check failed
+        """
+        self.check_resource_presence(cluster_id,
+                                     self._client.get_cluster,
+                                     must_present=must_present)
 
     @steps_checker.step
     def get_clusters(self, check=True, **kwargs):
