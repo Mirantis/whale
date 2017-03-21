@@ -19,7 +19,9 @@ Decapod UI steps for playbook configuration
 
 from stepler.third_party import steps_checker
 from stepler.third_party import utils
+from stepler.third_party import waiter
 
+from whale import config
 from whale.decapod_ui.steps import base
 
 
@@ -79,3 +81,28 @@ class ConfigurationSteps(base.BaseSteps):
             page.list_configurations.row(name).wait_for_presence()
 
         return name
+
+    @steps_checker.step
+    def create_execution(self, config_name, check=True):
+        """Step to create execution.
+
+        Args:
+            config_name (str, optional): name of configuration
+            check (bool, optional): flag whether to check step or not
+
+        Returns:
+            str: configuration name
+
+        Raises:
+            TimeoutExpired: if check failed after timeout
+        """
+        page = self._page_configurations()
+
+        page.list_configurations.row(config_name).maximize_icon.click()
+        page.list_configurations.row(config_name).button_execute_config.click()
+
+        if check:
+            waiter.wait(
+                lambda: (self.app.current_page.page_header_value ==
+                         self.app.page_executions.page_header_value),
+                timeout_seconds=config.PAGE_FORWARDING_TIMEOUT)

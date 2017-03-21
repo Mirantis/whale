@@ -19,13 +19,16 @@ Cluster fixtures
 
 import pytest
 
+from whale import config
 from whale.decapod import steps
 
 __all__ = [
     'get_cluster_steps',
     'cluster_steps',
+    'delete_cluster',
     'create_cluster',
     'cluster',
+    'cleanup_clusters',
 ]
 
 
@@ -46,20 +49,61 @@ def get_cluster_steps(get_decapod_client):
 
 
 @pytest.fixture
-def cluster_steps(get_cluster_steps):
+def cluster_steps(get_cluster_steps, cleanup_clusters):
     """Function fixture to get cluster steps.
 
     Args:
         get_cluster_steps (function): function to get cluster steps
+        cleanup_clusters (function): function to cleanup clusters after test
 
-    Returns:
+    Yields:
         ClusterSteps: instantiated cluster steps
     """
-    return get_cluster_steps()
+    _cluster_steps = get_cluster_steps()
+    clusters = _cluster_steps.get_clusters(check=False)
+    clusters_ids_before = {cluster['id'] for cluster in clusters}
+
+    yield _cluster_steps
+
+    cleanup_clusters(_cluster_steps, uncleanable_ids=clusters_ids_before)
 
 
 @pytest.fixture
-def create_cluster(cluster_steps):
+def delete_cluster(get_cluster_steps, create_playbook_config,
+                   get_execution_steps):
+    """Callable fixture to delete cluster.
+
+    If cluster is deployed, this fixture creates execution to delete it.
+    Otherwise cluster_steps are used.
+
+    Args:
+        get_cluster_steps (object): function to get cluster steps
+        create_playbook_config (function): create configuration
+        get_execution_steps (object): function to get execution steps
+
+    Returns:
+        function: function to delete cluster
+    """
+    def _delete_cluster(cluster_id, version=1):
+        _cluster_steps = get_cluster_steps()
+        _execution_steps = get_execution_steps()
+
+        cluster = _cluster_steps.get_cluster(cluster_id)
+        if cluster['data']['configuration']:
+            # cluster has servers
+            playbook_config = create_playbook_config(
+                cluster['id'], config.PLAYBOOK_PURGE_CLUSTER, server_ids=[])
+            _execution_steps.create_execution(playbook_config['id'],
+                                              version)
+        else:
+            # cluster doesn't have servers
+            _cluster_steps.delete_cluster(cluster_id)
+
+    return _delete_cluster
+
+
+@pytest.fixture
+def create_cluster(cluster_steps, delete_cluster):
     """Callable fixture to create cluster with options.
 
     Can be called several times during a test.
@@ -67,6 +111,7 @@ def create_cluster(cluster_steps):
 
     Args:
         cluster_steps (object): instantiated cluster steps
+        delete_cluster (function): function to delete cluster
 
     Yields:
         function: function to create cluster with options
@@ -81,7 +126,7 @@ def create_cluster(cluster_steps):
     yield _create_cluster
 
     for cluster in clusters:
-        cluster_steps.delete_cluster(cluster['id'])
+        delete_cluster(cluster['id'])
 
 
 @pytest.fixture
@@ -95,3 +140,22 @@ def cluster(create_cluster):
         dict: model of the cluster
     """
     return create_cluster()
+
+
+@pytest.fixture
+def cleanup_clusters(delete_cluster):
+    """"Callable session fixture to cleanup clusters.
+
+    Args:
+        delete_cluster (function): function to delete cluster
+
+    Returns:
+        function: function to cleanup clusters after tests
+    """
+    def _cleanup_clusters(_cluster_steps, uncleanable_ids=None):
+        uncleanable_ids = uncleanable_ids or []
+        for cluster in _cluster_steps.get_clusters(check=False):
+            if cluster['id'] not in uncleanable_ids:
+                delete_cluster(cluster['id'])
+
+    return _cleanup_clusters
