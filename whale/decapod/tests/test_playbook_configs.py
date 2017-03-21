@@ -51,8 +51,7 @@ def test_create_delete_playbook_config(playbook_config_steps, cluster,
 
 
 @pytest.mark.idempotent_id('6263626a-f2c4-4b34-a746-c3e8675b8ff5')
-def test_update_playbook_config(playbook_config_steps,
-                                playbook_config):
+def test_update_playbook_config(playbook_config_steps, playbook_config):
     """**Scenario:** Check playbook configuration updating.
 
     **Setup:**
@@ -73,8 +72,7 @@ def test_update_playbook_config(playbook_config_steps,
 
 
 @pytest.mark.idempotent_id('c75fd086-d25b-4e30-b999-b421fc29b708')
-def test_get_playbook_config(playbook_config_steps,
-                             playbook_config):
+def test_get_playbook_config(playbook_config_steps, playbook_config):
     """**Scenario:** Check playbook configuration getting.
 
     **Setup:**
@@ -93,8 +91,7 @@ def test_get_playbook_config(playbook_config_steps,
 
 
 @pytest.mark.idempotent_id('0f22c1f9-56ab-4d25-b262-590b9a64623d')
-def test_list_playbook_config(playbook_config,
-                              playbook_config_steps):
+def test_list_playbook_configs(playbook_config, playbook_config_steps):
     """**Scenario:** Check getting of all playbook configurations.
 
     **Setup:**
