@@ -50,6 +50,14 @@ base.PRESENCE_ERRORS += (exceptions.WebDriverException, )
 
 PLAYBOOK_DEPLOY_CLUSTER = 'cluster_deploy'
 PLAYBOOK_PURGE_CLUSTER = 'purge_cluster'
+PLAYBOOK_ADD_OSD = 'add_osd'
+PLAYBOOK_REMOVE_OSD = 'remove_osd'
+PLAYBOOK_ADD_MONITOR = 'add_mon'
+PLAYBOOK_REMOVE_MONITOR = 'remove_mon'
+PLAYBOOK_TELEGRAF_INTEGRATION = 'telegraf_integration'
+PLAYBOOK_TELEGRAF_REMOVAL = 'purge_telegraf'
+PLAYBOOK_CINDER_INTEGRATON = 'cinder_integration'
+PLAYBOOK_UPGRADE_CEPH = 'upgrade_ceph'
 
 # execution
 EXECUTION_CREATED_STATUS = 'created'
@@ -59,3 +67,5 @@ EXECUTION_COMPLETED_STATUS = 'completed'
 EXECUTION_COMPLETED_TIMEOUT = 5 * 60
 
 PAGE_FORWARDING_TIMEOUT = 60
+
+PLAYBOOK_VERSION = 1
