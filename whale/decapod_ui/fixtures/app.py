@@ -22,10 +22,9 @@ from stepler.horizon.fixtures.auto_use import report_dir
 from stepler.horizon.fixtures.auto_use import video_capture
 from stepler.horizon.fixtures.auto_use import virtual_display
 
-from whale.decapod_ui.app import Decapod
-from whale.decapod_ui.steps import AuthSteps
-
 from whale import config
+from whale.decapod_ui import app
+from whale.decapod_ui import steps
 
 __all__ = [
     'auth_steps',
@@ -41,15 +40,15 @@ __all__ = [
 @pytest.yield_fixture
 def decapod(video_capture):
     """Initial fixture to start."""
-    app = Decapod(config.DECAPOD_WD_URL)
-    yield app
-    app.quit()
+    application = app.Decapod(config.DECAPOD_WD_URL)
+    yield application
+    application.quit()
 
 
 @pytest.fixture
 def auth_steps(decapod):
     """Get auth steps to login or logout in decapod."""
-    return AuthSteps(decapod)
+    return steps.AuthSteps(decapod)
 
 
 @pytest.fixture
@@ -58,8 +57,7 @@ def login(auth_steps):
 
     Majority of tests requires user login. Logs out after test.
     """
-    auth_steps.login(config.DECAPOD_LOGIN, config.DECAPOD_PASSWORD)
-
+    auth_steps.login()
     yield
     # reload page to be sure that modal form doesn't prevent to logout
     auth_steps.app.current_page.refresh()

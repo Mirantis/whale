@@ -18,7 +18,6 @@ Horizon base steps
 # limitations under the License.
 
 from hamcrest import assert_that, equal_to  # noqa
-
 from stepler.third_party import steps_checker
 
 

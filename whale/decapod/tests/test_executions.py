@@ -71,63 +71,55 @@ def test_deploy_cluster_add_osd_monitor_telegraf(cluster_steps,
         playbook_id=config.PLAYBOOK_DEPLOY_CLUSTER,
         server_ids=cluster_server_ids)
 
-    execution_steps.create_execution(playbook_config['id'],
-                                     config.PLAYBOOK_VERSION)
+    execution_steps.create_execution(playbook_config['id'])
 
     playbook_config = playbook_config_steps.create_playbook_config(
         cluster_id=cluster['id'],
         playbook_id=config.PLAYBOOK_ADD_OSD,
         server_ids=[osd_server_id])
 
-    execution_steps.create_execution(playbook_config['id'],
-                                     config.PLAYBOOK_VERSION)
+    execution_steps.create_execution(playbook_config['id'])
 
     playbook_config = playbook_config_steps.create_playbook_config(
         cluster_id=cluster['id'],
         playbook_id=config.PLAYBOOK_ADD_MONITOR,
         server_ids=[monitor_server_id])
 
-    execution_steps.create_execution(playbook_config['id'],
-                                     config.PLAYBOOK_VERSION)
+    execution_steps.create_execution(playbook_config['id'])
 
     playbook_config = playbook_config_steps.create_playbook_config(
         cluster_id=cluster['id'],
         playbook_id=config.PLAYBOOK_TELEGRAF_INTEGRATION,
         server_ids=all_server_ids)
 
-    execution_steps.create_execution(playbook_config['id'],
-                                     config.PLAYBOOK_VERSION)
+    execution_steps.create_execution(playbook_config['id'])
 
     playbook_config = playbook_config_steps.create_playbook_config(
         cluster_id=cluster['id'],
         playbook_id=config.PLAYBOOK_TELEGRAF_REMOVAL,
         server_ids=all_server_ids)
 
-    execution_steps.create_execution(playbook_config['id'],
-                                     config.PLAYBOOK_VERSION)
+    execution_steps.create_execution(playbook_config['id'])
 
     playbook_config = playbook_config_steps.create_playbook_config(
         cluster_id=cluster['id'],
         playbook_id=config.PLAYBOOK_REMOVE_MONITOR,
         server_ids=[monitor_server_id])
 
-    execution_steps.create_execution(playbook_config['id'],
-                                     config.PLAYBOOK_VERSION)
+    execution_steps.create_execution(playbook_config['id'])
 
     playbook_config = playbook_config_steps.create_playbook_config(
         cluster_id=cluster['id'],
         playbook_id=config.PLAYBOOK_REMOVE_OSD,
         server_ids=[osd_server_id])
 
-    execution_steps.create_execution(playbook_config['id'],
-                                     config.PLAYBOOK_VERSION)
+    execution_steps.create_execution(playbook_config['id'])
 
     playbook_config = playbook_config_steps.create_playbook_config(
         cluster_id=cluster['id'],
         playbook_id=config.PLAYBOOK_PURGE_CLUSTER,
         server_ids=[])
 
-    execution_steps.create_execution(playbook_config['id'],
-                                     config.PLAYBOOK_VERSION)
+    execution_steps.create_execution(playbook_config['id'])
 
     cluster_steps.check_cluster_presence(cluster['id'], must_present=False)

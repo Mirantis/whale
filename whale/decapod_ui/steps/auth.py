@@ -19,10 +19,11 @@ Decapod steps for authentication
 
 from stepler.third_party import steps_checker
 
-from .base import BaseSteps
+import base
+from whale import config
 
 
-class AuthSteps(BaseSteps):
+class AuthSteps(base.BaseSteps):
     """Authentication steps."""
 
     def _page_login(self):
@@ -30,7 +31,8 @@ class AuthSteps(BaseSteps):
         return self._open(self.app.page_login)
 
     @steps_checker.step
-    def login(self, username, password, check=True):
+    def login(self, username=config.DECAPOD_LOGIN,
+              password=config.DECAPOD_PASSWORD, check=True):
         """Step to log in user account.
 
         Arguments:

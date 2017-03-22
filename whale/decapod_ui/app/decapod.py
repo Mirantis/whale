@@ -21,6 +21,8 @@ from tempfile import mkdtemp
 
 import pom
 from pom import ui
+from pom.ui import base
+from selenium.common import exceptions
 from selenium.webdriver import FirefoxProfile
 from selenium.webdriver.remote.remote_connection import RemoteConnection
 
@@ -28,6 +30,10 @@ from whale import config
 
 from .pages import PageBase, pages  # noqa
 
+# NOTE(agromov): If firefox can't get access to non-existing element,
+# it raises exception: `WebDriverException: Message: can't access dead object`.
+# Workaround: add WebDriverException to pom PRESENCE_ERRORS.
+base.PRESENCE_ERRORS += (exceptions.WebDriverException, )
 ui.UI.timeout = config.UI_TIMEOUT
 RemoteConnection.set_timeout(config.ACTION_TIMEOUT)
 sorted_pages = sorted(pages, key=lambda page: len(page.url))

@@ -17,8 +17,7 @@ Execution steps
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from hamcrest import (assert_that, empty, equal_to, has_length, is_in,
-                      is_not, none)  # noqa H301
+from hamcrest import assert_that, empty, equal_to, is_not, none  # noqa H301
 from stepler.third_party import steps_checker
 from stepler.third_party import waiter
 
@@ -36,7 +35,7 @@ class ExecutionSteps(base.BaseSteps):
     @steps_checker.step
     def create_execution(self,
                          playbook_config_id,
-                         playbook_config_version,
+                         playbook_config_version=config.PLAYBOOK_VERSION,
                          check=True,
                          **kwargs):
         """Step to create new playbook configuration model.
@@ -59,12 +58,7 @@ class ExecutionSteps(base.BaseSteps):
         if check:
             self.check_resource_presence(execution['id'],
                                          self._client.get_execution)
-            self.check_execution_status(
-                execution['id'],
-                expected_statuses=[config.EXECUTION_COMPLETED_STATUS],
-                transit_statuses=[config.EXECUTION_CREATED_STATUS,
-                                  config.EXECUTION_STARTED_STATUS],
-                timeout=config.EXECUTION_COMPLETED_TIMEOUT)
+            self.check_execution_status(execution['id'])
 
         return execution
 
@@ -142,17 +136,16 @@ class ExecutionSteps(base.BaseSteps):
         return execution
 
     @steps_checker.step
-    def check_execution_status(self,
-                               execution_id,
-                               expected_statuses,
-                               transit_statuses=(),
-                               timeout=0):
-        """Check step volume status.
+    def check_execution_status(self, execution_id,
+                               status=config.EXECUTION_COMPLETED_STATUS,
+                               failure_status=config.EXECUTION_FAILED_STATUS,
+                               timeout=config.EXECUTION_COMPLETED_TIMEOUT):
+        """Step to check execution status.
 
         Args:
             execution_id (str): execution id
-            statuses (list): list of statuses to check
-            transit_statuses (tuple): possible volume transitional statuses
+            status (str): expected status to check
+            failure_status (str): status to fail check
             timeout (int): seconds to wait a result of check
 
         Raises:
@@ -160,10 +153,8 @@ class ExecutionSteps(base.BaseSteps):
         """
         def _check_execution_status():
             execution = self.get_execution(execution_id)
-            return waiter.expect_that(execution['data']['state'].lower(),
-                                      is_not(is_in(transit_statuses)))
+            actual_status = execution['data']['state'].lower()
+            assert_that(actual_status, is_not(failure_status))
+            return waiter.expect_that(actual_status, equal_to(status))
 
         waiter.wait(_check_execution_status, timeout_seconds=timeout)
-        execution = self.get_execution(execution_id)
-        assert_that(execution['data']['state'].lower(),
-                    is_in(expected_statuses))

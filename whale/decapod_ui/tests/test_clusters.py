@@ -88,8 +88,7 @@ def test_delete_cluster(cluster_steps,
         playbook_id=config.PLAYBOOK_DEPLOY_CLUSTER,
         server_ids=server_ids)
 
-    execution_steps.create_execution(playbook_config_deploy['id'],
-                                     config.PLAYBOOK_VERSION)
+    execution_steps.create_execution(playbook_config_deploy['id'])
 
     playbook_config_purge = playbook_config_steps.create_playbook_config(
         cluster_id=cluster['id'],
@@ -100,12 +99,6 @@ def test_delete_cluster(cluster_steps,
         playbook_config_purge['data']['name'])
     execution = execution_steps.get_last_execution_by_config_id(
         playbook_config_purge['id'])
-    execution_steps.check_execution_status(
-        execution['id'],
-        expected_statuses=[config.EXECUTION_COMPLETED_STATUS],
-        transit_statuses=[config.EXECUTION_CREATED_STATUS,
-                          config.EXECUTION_STARTED_STATUS],
-        timeout=config.EXECUTION_COMPLETED_TIMEOUT)
+    execution_steps.check_execution_status(execution['id'])
 
-    cluster_steps.check_cluster_presence(cluster['id'],
-                                         must_present=False)
+    cluster_steps.check_cluster_presence(cluster['id'], must_present=False)

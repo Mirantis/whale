@@ -19,8 +19,6 @@ Execution tests
 
 import pytest
 
-from whale import config
-
 
 @pytest.mark.idempotent_id('d055a21c-8cbe-49ec-82eb-360d9973264d')
 def test_create_execution_deploy_cluster(playbook_config,
@@ -47,9 +45,4 @@ def test_create_execution_deploy_cluster(playbook_config,
 
     execution = execution_steps.get_last_execution_by_config_id(
         playbook_config['id'])
-    execution_steps.check_execution_status(
-        execution['id'],
-        expected_statuses=[config.EXECUTION_COMPLETED_STATUS],
-        transit_statuses=[config.EXECUTION_CREATED_STATUS,
-                          config.EXECUTION_STARTED_STATUS],
-        timeout=config.EXECUTION_COMPLETED_TIMEOUT)
+    execution_steps.check_execution_status(execution['id'])

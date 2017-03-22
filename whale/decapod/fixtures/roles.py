@@ -18,7 +18,6 @@ Role fixtures
 # limitations under the License.
 
 import pytest
-from stepler.third_party import utils
 
 from whale.decapod import steps
 
