@@ -119,6 +119,26 @@ class ConfigurationSteps(base.BaseSteps):
                 form.cancel(modal_absent=False)
 
     @steps_checker.step
+    def delete_configuration(self, config_name, check=True):
+        """Step to delete playbook configuration.
+
+        Args:
+            config_name (str): playbook configuration name
+            check (bool, optional): flag whether to check step or not
+
+        Raises:
+            Exception: if configuration is present on page
+        """
+        page = self._page_configurations()
+
+        page.list_configurations.row(config_name).maximize_icon.click()
+        page.list_configurations.row(config_name).button_delete_config.click()
+        page.form_confirm_config_deletion.submit(modal_absent=False)
+
+        if check:
+            page.list_configurations.row(config_name).wait_for_absence()
+
+    @steps_checker.step
     def create_execution(self, config_name, check=True):
         """Step to create execution.
 

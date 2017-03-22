@@ -81,3 +81,33 @@ def test_update_config_cluster_name(playbook_config,
 
     ui_configuration_steps.update_configuration(
         playbook_config['data']['name'], config_data)
+
+
+@pytest.mark.idempotent_id('0abce2ee-382f-41ea-92ec-d88e3d2bb4c5')
+def test_delete_config(cluster,
+                       server_steps,
+                       playbook_config_steps,
+                       ui_configuration_steps):
+    """**Scenario:** Playbook configuration may be deleted in UI.
+
+    **Setup:**
+
+    #. Create cluster via API
+
+    **Steps:**
+
+    #. Create playbook `cluster deploy` configuration via API
+    #. Delete playbook `cluster deploy` configuration via UI
+
+    **Teardown:**
+
+    #. Delete cluster via API
+    """
+    server_ids = server_steps.get_server_ids()
+    playbook_config = playbook_config_steps.create_playbook_config(
+        cluster_id=cluster['id'],
+        playbook_id=config.PLAYBOOK_DEPLOY_CLUSTER,
+        server_ids=server_ids)
+
+    ui_configuration_steps.delete_configuration(
+        playbook_config['data']['name'])

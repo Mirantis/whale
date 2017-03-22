@@ -119,6 +119,13 @@ class FormUpdateConfiguration(_ui.Form):
     cancel_locator = By.CSS_SELECTOR, 'button#close'
 
 
+class FormConfirmConfigDeletion(_ui.Form):
+    """Form to confirm configuration deleteion."""
+
+    submit_locator = By.CSS_SELECTOR, 'button.btn.btn-primary'
+    cancel_locator = By.CSS_SELECTOR, 'button.btn.btn-default'
+
+
 @ui.register_ui(
     button_create_configuration=ui.Button(
         By.CSS_SELECTOR, "div.main-button > button.btn-primary"),
@@ -132,7 +139,12 @@ class FormUpdateConfiguration(_ui.Form):
                                               "div.modal-content"),
     form_update_configuration=FormUpdateConfiguration(By.CSS_SELECTOR,
                                                       "div.modal-content"),
-    list_configurations=ListConfigurations(By.CSS_SELECTOR, "div.col-xs-12"))
+    list_configurations=ListConfigurations(
+        By.XPATH, './/div[@class="configurations row" or '
+                  '@class="no-configurations"]'),
+    form_confirm_config_deletion=FormConfirmConfigDeletion(
+        By.XPATH, './/div[@class="modal-content" and '
+                  'contains(.//*, "Delete configuration")]'))
 class PageConfigurations(base.PageBase):
     """Page to management configurations."""
 
