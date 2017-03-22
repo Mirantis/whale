@@ -51,3 +51,33 @@ def test_create_config_deploy_cluster(cluster,
     ui_configuration_steps.create_deploy_configuration(playbook_config['name'],
                                                        cluster['data']['name'],
                                                        servers)
+
+
+@pytest.mark.idempotent_id('833ff699-32d0-4bb1-8a9b-33a3de4b20ed')
+def test_update_config_cluster_name(playbook_config,
+                                    create_cluster,
+                                    ui_configuration_steps):
+    """**Scenario:** Playbook configuration may be updated in UI.
+
+    **Setup:**
+
+    #. Create cluster via API
+    #. Create playbook `cluster deploy` configuration via API
+
+    **Steps:**
+
+    #. Create second cluster via API
+    #. Update cluster name of playbook configuration using UI
+
+    **Teardown:**
+
+    #. Delete playbook configuration via API
+    #. Delete clusters via API
+    """
+    new_cluster = create_cluster()
+
+    config_data = playbook_config['data']['configuration']
+    config_data['global_vars']['cluster'] = new_cluster['data']['name']
+
+    ui_configuration_steps.update_configuration(
+        playbook_config['data']['name'], config_data)

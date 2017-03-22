@@ -17,6 +17,9 @@ Decapod UI steps for playbook configuration
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
+
+from hamcrest import assert_that, has_entries  # noqa H301
 from stepler.third_party import steps_checker
 from stepler.third_party import utils
 from stepler.third_party import waiter
@@ -81,6 +84,39 @@ class ConfigurationSteps(base.BaseSteps):
             page.list_configurations.row(name).wait_for_presence()
 
         return name
+
+    @steps_checker.step
+    def update_configuration(self, config_name, new_config_data, check=True):
+        """Step to update playbook configuration.
+
+        Args:
+            config_name (str): playbook config name
+            new_config_data (dict): new data for the configuration
+            check (bool, optional): flag whether to check step or not
+
+        Raises:
+            AssertionError: if check failed
+        """
+        page = self._page_configurations()
+
+        page.list_configurations.row(config_name).maximize_icon.click()
+        page.list_configurations.row(config_name).button_edit_config.click()
+
+        with page.form_update_configuration as form:
+            config_dict = json.loads(form.field_playbook_config.value)
+            config_dict.update(new_config_data)
+            form.field_playbook_config.value = json.dumps(config_dict)
+            form.submit(modal_absent=False)
+
+        if check:
+            page.list_configurations.row(
+                config_name).button_view_config.click()
+            with page.form_update_configuration as form:
+                config_dict = json.loads(form.field_playbook_config.value)
+                assert_that(config_dict['global_vars']['cluster'],
+                            assert_that(config_dict,
+                                        has_entries(new_config_data)))
+                form.cancel(modal_absent=False)
 
     @steps_checker.step
     def create_execution(self, config_name, check=True):

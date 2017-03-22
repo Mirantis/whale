@@ -32,6 +32,9 @@ from whale.decapod_ui.app import ui as _ui
     button_edit_config=ui.Button(
         By.XPATH, './/button[contains(@class, "btn-primary") and '
                   'contains(text(), "Edit")]'),
+    button_view_config=ui.Button(
+        By.XPATH, './/button[contains(@class, "btn-primary") and '
+                  'contains(text(), "View")]'),
     button_delete_config=ui.Button(By.CSS_SELECTOR, 'button.btn.btn-danger'))
 class RowConfiguration(ui.Row):
     """Row of configuration."""
@@ -108,6 +111,15 @@ class FormPlaybookServers(_ui.Form):
 
 
 @ui.register_ui(
+    field_playbook_config=ui.TextField(By.NAME, 'configuration'))
+class FormUpdateConfiguration(_ui.Form):
+    """Form to update configuration."""
+
+    submit_locator = By.CSS_SELECTOR, 'button#save'
+    cancel_locator = By.CSS_SELECTOR, 'button#close'
+
+
+@ui.register_ui(
     button_create_configuration=ui.Button(
         By.CSS_SELECTOR, "div.main-button > button.btn-primary"),
     form_create_configuration=FormCreateConfiguration(By.CSS_SELECTOR,
@@ -118,6 +130,8 @@ class FormPlaybookServers(_ui.Form):
                                                     "div.modal-content"),
     form_playbook_servers=FormPlaybookServers(By.CSS_SELECTOR,
                                               "div.modal-content"),
+    form_update_configuration=FormUpdateConfiguration(By.CSS_SELECTOR,
+                                                      "div.modal-content"),
     list_configurations=ListConfigurations(By.CSS_SELECTOR, "div.col-xs-12"))
 class PageConfigurations(base.PageBase):
     """Page to management configurations."""
