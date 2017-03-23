@@ -54,8 +54,8 @@ def test_create_config_deploy_cluster(cluster,
 
 
 @pytest.mark.idempotent_id('833ff699-32d0-4bb1-8a9b-33a3de4b20ed')
-def test_update_config_cluster_name(playbook_config,
-                                    create_cluster,
+def test_update_config_cluster_name(playbook_config_deploy,
+                                    cluster_steps,
                                     ui_configuration_steps):
     """**Scenario:** Playbook configuration may be updated in UI.
 
@@ -74,40 +74,32 @@ def test_update_config_cluster_name(playbook_config,
     #. Delete playbook configuration via API
     #. Delete clusters via API
     """
-    new_cluster = create_cluster()
+    new_cluster = cluster_steps.create_cluster()
 
-    config_data = playbook_config['data']['configuration']
+    config_data = playbook_config_deploy['data']['configuration']
     config_data['global_vars']['cluster'] = new_cluster['data']['name']
 
     ui_configuration_steps.update_configuration(
-        playbook_config['data']['name'], config_data)
+        playbook_config_deploy['data']['name'], config_data)
 
 
 @pytest.mark.idempotent_id('0abce2ee-382f-41ea-92ec-d88e3d2bb4c5')
-def test_delete_config(cluster,
-                       server_steps,
-                       playbook_config_steps,
+def test_delete_config(playbook_config_deploy,
                        ui_configuration_steps):
     """**Scenario:** Playbook configuration may be deleted in UI.
 
     **Setup:**
 
     #. Create cluster via API
+    #. Create playbook `cluster deploy` configuration via API
 
     **Steps:**
 
-    #. Create playbook `cluster deploy` configuration via API
     #. Delete playbook `cluster deploy` configuration via UI
 
     **Teardown:**
 
     #. Delete cluster via API
     """
-    server_ids = server_steps.get_server_ids()
-    playbook_config = playbook_config_steps.create_playbook_config(
-        cluster_id=cluster['id'],
-        playbook_id=config.PLAYBOOK_DEPLOY_CLUSTER,
-        server_ids=server_ids)
-
     ui_configuration_steps.delete_configuration(
-        playbook_config['data']['name'])
+        playbook_config_deploy['data']['name'])

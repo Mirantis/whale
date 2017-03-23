@@ -26,8 +26,8 @@ __all__ = [
     'get_cluster_steps',
     'cluster_steps',
     'delete_cluster',
-    'create_cluster',
     'cluster',
+    'deploy_cluster',
     'cleanup_clusters',
 ]
 
@@ -69,32 +69,45 @@ def cluster_steps(get_cluster_steps, cleanup_clusters):
 
 
 @pytest.fixture
-def delete_cluster(get_cluster_steps, create_playbook_config,
-                   get_execution_steps):
+def delete_cluster(get_cluster_steps,
+                   playbook_config_steps,
+                   execution_steps):
     """Callable fixture to delete cluster.
 
     If cluster is deployed, this fixture creates execution to delete it.
     Otherwise cluster_steps are used.
+    This fixture is used in cluster_steps for clusters cleanup so we have
+    to use get_cluster_steps for cluster_steps getting to avoid recursion.
 
     Args:
-        get_cluster_steps (object): function to get cluster steps
-        create_playbook_config (function): create configuration
-        get_execution_steps (object): function to get execution steps
+        get_cluster_steps (function): function to get cluster steps
+        playbook_config_steps (obj): instantiated playbook config steps
+        execution_steps (obj): instantiated execution steps
 
     Returns:
         function: function to delete cluster
     """
-    def _delete_cluster(cluster_id, version=1):
+    def _delete_cluster(cluster_id):
         _cluster_steps = get_cluster_steps()
-        _execution_steps = get_execution_steps()
 
         cluster = _cluster_steps.get_cluster(cluster_id)
         if cluster['data']['configuration']:
             # cluster has servers
-            playbook_config = create_playbook_config(
+            if 'osds' in cluster['data']['configuration']:
+                # we can't remove cluster with osd
+                server_ids = [
+                    server['server_id']
+                    for server in cluster['data']['configuration']['osds']
+                ]
+                osd_config = playbook_config_steps.create_playbook_config(
+                    cluster['id'],
+                    config.PLAYBOOK_REMOVE_OSD,
+                    server_ids=server_ids)
+                execution_steps.create_execution(osd_config['id'])
+
+            cluster_config = playbook_config_steps.create_playbook_config(
                 cluster['id'], config.PLAYBOOK_PURGE_CLUSTER, server_ids=[])
-            _execution_steps.create_execution(playbook_config['id'],
-                                              version)
+            execution_steps.create_execution(cluster_config['id'])
         else:
             # cluster doesn't have servers
             _cluster_steps.delete_cluster(cluster_id)
@@ -103,43 +116,34 @@ def delete_cluster(get_cluster_steps, create_playbook_config,
 
 
 @pytest.fixture
-def create_cluster(cluster_steps, delete_cluster):
-    """Callable fixture to create cluster with options.
-
-    Can be called several times during a test.
-    After the test it destroys all created clusters.
-
-    Args:
-        cluster_steps (object): instantiated cluster steps
-        delete_cluster (function): function to delete cluster
-
-    Yields:
-        function: function to create cluster with options
-    """
-    clusters = []
-
-    def _create_cluster(*args, **kwargs):
-        cluster = cluster_steps.create_cluster(*args, **kwargs)
-        clusters.append(cluster)
-        return cluster
-
-    yield _create_cluster
-
-    for cluster in clusters:
-        delete_cluster(cluster['id'])
-
-
-@pytest.fixture
-def cluster(create_cluster):
+def cluster(cluster_steps):
     """Fixture to create cluster with default options before test.
 
     Args:
-        create_cluster (function): function to create cluster with options
+        cluster_steps (obj): instantiated cluster steps
 
     Returns:
         dict: model of the cluster
     """
-    return create_cluster()
+    return cluster_steps.create_cluster()
+
+
+@pytest.fixture
+def deploy_cluster(cluster_steps, playbook_config_deploy, execution_steps):
+    """Fixture to create and deploy cluster before test.
+
+    Args:
+        cluster_steps (obj): instantiated cluster steps
+        playbook_config_deploy (dict): created playbook configuration
+            to deploy cluster
+        execution_steps (obj): instantiated execution steps
+
+    Returns:
+        dict: model of the cluster
+    """
+    execution_steps.create_execution(playbook_config_deploy['id'])
+    return cluster_steps.get_cluster(
+        playbook_config_deploy['data']['cluster_id'])
 
 
 @pytest.fixture

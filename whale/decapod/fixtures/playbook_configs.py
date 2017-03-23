@@ -25,8 +25,7 @@ from whale.decapod import steps
 __all__ = [
     'get_playbook_config_steps',
     'playbook_config_steps',
-    'create_playbook_config',
-    'playbook_config',
+    'playbook_config_deploy',
     'cleanup_playbook_configs',
 ]
 
@@ -70,50 +69,23 @@ def playbook_config_steps(get_playbook_config_steps, cleanup_playbook_configs):
 
 
 @pytest.fixture
-def create_playbook_config(playbook_config_steps):
-    """Callable fixture to create playbook configuration with options.
-
-    Can be called several times during a test.
-    After the test it destroys all created configurations.
-
-    Args:
-        playbook_config_steps (object): instantiated config steps
-
-    Yields:
-        function: function to create playbook config with options
-    """
-    playbook_configs = []
-
-    def _create_playbook_config(*args, **kwargs):
-        playbook_config = (playbook_config_steps.
-                           create_playbook_config(*args, **kwargs))
-        playbook_configs.append(playbook_config)
-        return playbook_config
-
-    yield _create_playbook_config
-
-    for playbook_config in playbook_configs:
-        playbook_config_steps.delete_playbook_config(
-            playbook_config['id'])
-
-
-@pytest.fixture
-def playbook_config(cluster, server_steps, create_playbook_config):
+def playbook_config_deploy(cluster, server_steps, playbook_config_steps):
     """Function fixture to create playbook config before test.
 
     Args:
         cluster (dict): model of cluster
         server_steps (fixture): fixture to get servers ids
-        create_playbook_config (function): create configuration
+        playbook_config_steps (obj): instantiated playbook config steps
 
     Returns:
         dict: model of new playbook configuration
     """
     playbook_id = config.PLAYBOOK_DEPLOY_CLUSTER
     server_ids = server_steps.get_server_ids()
-    return create_playbook_config(cluster_id=cluster['id'],
-                                  playbook_id=playbook_id,
-                                  server_ids=server_ids)
+    return playbook_config_steps.create_playbook_config(
+        cluster_id=cluster['id'],
+        playbook_id=playbook_id,
+        server_ids=server_ids)
 
 
 @pytest.fixture(scope='session')

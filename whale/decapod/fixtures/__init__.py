@@ -36,8 +36,7 @@ __all__ = sorted([  # sort for documentation
 
     'get_playbook_config_steps',
     'playbook_config_steps',
-    'create_playbook_config',
-    'playbook_config',
+    'playbook_config_deploy',
     'cleanup_playbook_configs',
 
     'get_execution_steps',
@@ -57,8 +56,8 @@ __all__ = sorted([  # sort for documentation
     'get_cluster_steps',
     'cluster_steps',
     'delete_cluster',
-    'create_cluster',
     'cluster',
+    'deploy_cluster',
     'cleanup_clusters',
 
     'get_server_steps',

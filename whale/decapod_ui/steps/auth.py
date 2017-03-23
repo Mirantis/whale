@@ -19,8 +19,8 @@ Decapod steps for authentication
 
 from stepler.third_party import steps_checker
 
-import base
 from whale import config
+from whale.decapod_ui.steps import base
 
 
 class AuthSteps(base.BaseSteps):

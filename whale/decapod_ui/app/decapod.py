@@ -27,8 +27,8 @@ from selenium.webdriver import FirefoxProfile
 from selenium.webdriver.remote.remote_connection import RemoteConnection
 
 from whale import config
+from whale.decapod_ui.app import pages as app_pages
 
-from .pages import PageBase, pages  # noqa
 
 # NOTE(agromov): If firefox can't get access to non-existing element,
 # it raises exception: `WebDriverException: Message: can't access dead object`.
@@ -36,7 +36,7 @@ from .pages import PageBase, pages  # noqa
 base.PRESENCE_ERRORS += (exceptions.WebDriverException, )
 ui.UI.timeout = config.UI_TIMEOUT
 RemoteConnection.set_timeout(config.ACTION_TIMEOUT)
-sorted_pages = sorted(pages, key=lambda page: len(page.url))
+sorted_pages = sorted(app_pages.pages, key=lambda page: len(page.url))
 
 
 class Profile(FirefoxProfile):
@@ -57,7 +57,7 @@ class Profile(FirefoxProfile):
         self.set_preference("browser.download.panel.shown", True)
 
 
-@pom.register_pages(pages)
+@pom.register_pages(app_pages.pages)
 class Decapod(pom.App):
     """Application to launch decapod in browser."""
 
@@ -103,7 +103,7 @@ class Decapod(pom.App):
 
                 if not (url_end and url_end[0].isalnum()):
                     return page(self)
-        return PageBase(self)
+        return app_pages.PageBase(self)
 
     def flush_session(self):
         """Delete all cookies.

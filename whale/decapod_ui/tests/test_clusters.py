@@ -28,11 +28,13 @@ def test_create_cluster(ui_cluster_steps, cluster_steps):
 
     #. Create cluster via UI
     #. Find cluster by name via API
+
+    **Teardown:**
+
     #. Delete cluster via API
     """
     cluster_name = ui_cluster_steps.create_cluster()
-    cluster_id = cluster_steps.get_cluster_by_name(cluster_name)['id']
-    cluster_steps.delete_cluster(cluster_id)
+    cluster_steps.get_cluster_by_name(cluster_name)
 
 
 @pytest.mark.idempotent_id('a660cc41-6be4-4bb4-b03d-ccab363a6891')
