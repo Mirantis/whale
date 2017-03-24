@@ -77,8 +77,7 @@ def test_create_execution_purge_cluster(cluster_steps,
     """
     playbook_config_purge = playbook_config_steps.create_playbook_config(
         cluster_id=deploy_cluster['id'],
-        playbook_id=config.PLAYBOOK_PURGE_CLUSTER,
-        server_ids=[])
+        playbook_id=config.PLAYBOOK_PURGE_CLUSTER)
 
     ui_configuration_steps.create_execution(
         playbook_config_purge['data']['name'])

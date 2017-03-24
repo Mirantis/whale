@@ -23,19 +23,19 @@ from whale import config
 
 
 @pytest.mark.idempotent_id('a6173c5c-7208-4d92-9701-3aae79794671')
-def test_deploy_cluster_add_osd_monitor_telegraf(cluster_steps,
+def test_deploy_cluster_add_osd_monitor_telegraf(deploy_cluster,
                                                  server_steps,
                                                  playbook_config_steps,
                                                  execution_steps):
     """**Scenario:** Deploy Ceph cluster, add OSD and monitor hosts, Telegraf.
 
+    **Setup:**
+
+    #. Deploy cluster
+
     **Steps:**
 
-    #. Get available servers
-    #. Create cluster
-    #. Create new configuration, using the cluster and
-       "Deploy Ceph cluster" playbook and 3 servers
-    #. Execute created configuration
+    #. Get all servers
     #. Create new configuration, using the cluster and
        "Add OSD to Ceph cluster" playbook and 1 vacant server
     #. Execute created configuration
@@ -54,72 +54,90 @@ def test_deploy_cluster_add_osd_monitor_telegraf(cluster_steps,
     #. Create new configuration, using the cluster and
        "Remove OSD host from Ceph cluster" playbook and OSD server
     #. Execute created configuration
-    #. Create new configuration, using the cluster and
-       "Purge cluster" playbook
-    #. Execute created configuration
-    #. Check the cluster is absent
+
+    **Teardown:**
+
+    #. Delete cluster via "purge_cluster" playbook execution.
     """
     all_server_ids = server_steps.get_server_ids()
-    cluster_server_ids = all_server_ids[0:3]
-    osd_server_id = all_server_ids[3]
-    monitor_server_id = all_server_ids[4]
 
-    cluster = cluster_steps.create_cluster()
+    osd_server_id, monitor_server_id = server_steps.get_server_ids(
+        vacant_only=True)[:2]
 
     playbook_config = playbook_config_steps.create_playbook_config(
-        cluster_id=cluster['id'],
-        playbook_id=config.PLAYBOOK_DEPLOY_CLUSTER,
-        server_ids=cluster_server_ids)
-
-    execution_steps.create_execution(playbook_config['id'])
-
-    playbook_config = playbook_config_steps.create_playbook_config(
-        cluster_id=cluster['id'],
+        cluster_id=deploy_cluster['id'],
         playbook_id=config.PLAYBOOK_ADD_OSD,
         server_ids=[osd_server_id])
 
     execution_steps.create_execution(playbook_config['id'])
 
     playbook_config = playbook_config_steps.create_playbook_config(
-        cluster_id=cluster['id'],
+        cluster_id=deploy_cluster['id'],
         playbook_id=config.PLAYBOOK_ADD_MONITOR,
         server_ids=[monitor_server_id])
 
     execution_steps.create_execution(playbook_config['id'])
 
     playbook_config = playbook_config_steps.create_playbook_config(
-        cluster_id=cluster['id'],
+        cluster_id=deploy_cluster['id'],
         playbook_id=config.PLAYBOOK_TELEGRAF_INTEGRATION,
         server_ids=all_server_ids)
 
     execution_steps.create_execution(playbook_config['id'])
 
     playbook_config = playbook_config_steps.create_playbook_config(
-        cluster_id=cluster['id'],
+        cluster_id=deploy_cluster['id'],
         playbook_id=config.PLAYBOOK_TELEGRAF_REMOVAL,
         server_ids=all_server_ids)
 
     execution_steps.create_execution(playbook_config['id'])
 
     playbook_config = playbook_config_steps.create_playbook_config(
-        cluster_id=cluster['id'],
+        cluster_id=deploy_cluster['id'],
         playbook_id=config.PLAYBOOK_REMOVE_MONITOR,
         server_ids=[monitor_server_id])
 
     execution_steps.create_execution(playbook_config['id'])
 
     playbook_config = playbook_config_steps.create_playbook_config(
-        cluster_id=cluster['id'],
+        cluster_id=deploy_cluster['id'],
         playbook_id=config.PLAYBOOK_REMOVE_OSD,
         server_ids=[osd_server_id])
 
     execution_steps.create_execution(playbook_config['id'])
 
+
+@pytest.mark.idempotent_id('d8f0b507-2185-4800-b431-f196be1c17b3')
+@pytest.mark.parametrize('playbook_config_deploy',
+                         [[config.OSD_COLLOCATED_JOURNALS,
+                           config.CEPH_REST_API]], indirect=True)
+def test_deploy_ceph_cluster_with_cinder_integration(playbook_config_deploy,
+                                                     deploy_cluster,
+                                                     server_steps,
+                                                     playbook_config_steps,
+                                                     execution_steps):
+    """**Scenario:** Deploy Ceph cluster with Cinder integration.
+
+    **Setup:**
+
+    #. Deploy cluster with OSD collocated journals and Ceph RestAPI
+
+    **Steps:**
+
+    #. Create new configuration, using the cluster and
+       "Cinder Integration" playbook with "Cinder with Ceph backend",
+       "Glance with Ceph backend" and "Nova with Ceph backend"
+    #. Execute created configuration
+
+    **Teardown:**
+
+    #. Delete cluster via "purge_cluster" playbook execution.
+    """
     playbook_config = playbook_config_steps.create_playbook_config(
-        cluster_id=cluster['id'],
-        playbook_id=config.PLAYBOOK_PURGE_CLUSTER,
-        server_ids=[])
+        cluster_id=deploy_cluster['id'],
+        playbook_id=config.PLAYBOOK_CINDER_INTEGRATON,
+        include_hint_ids=[config.CINDER_CEPH_BACKEND,
+                          config.GLANCE_CEPH_BACKEND,
+                          config.NOVA_CEPH_BACKEND])
 
     execution_steps.create_execution(playbook_config['id'])
-
-    cluster_steps.check_cluster_presence(cluster['id'], must_present=False)

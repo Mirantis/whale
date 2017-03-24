@@ -84,10 +84,13 @@ class ServerSteps(base.BaseSteps):
                                          must_present=False, timeout=60)
 
     @steps_checker.step
-    def get_servers(self, check=True, **kwargs):
+    def get_servers(self, vacant_only=False, busy_only=False, check=True,
+                    **kwargs):
         """Step to get servers.
 
         Args:
+            vacant_only (bool): flag to get vacant servers if ``True``
+            busy_only (bool): flag to get busy servers if ``True``
             check (bool): flag whether to check step or not
             **kwargs: any suitable keyword arguments
 
@@ -98,6 +101,10 @@ class ServerSteps(base.BaseSteps):
             AssertionError: if check failed
         """
         servers = self._client.get_servers(**kwargs)['items']
+        if vacant_only:
+            servers = [s for s in servers if not s['data']['cluster_id']]
+        if busy_only:
+            servers = [s for s in servers if s['data']['cluster_id']]
 
         if check:
             assert_that(servers, is_not(empty()))
@@ -133,16 +140,18 @@ class ServerSteps(base.BaseSteps):
         return server
 
     @steps_checker.step
-    def get_server_ids(self, check=True):
+    def get_server_ids(self, check=True, **options):
         """Step to get ids of all servers.
 
         Args:
             check (bool, optional): flag whether to check step or not
+            **options (keywords): options of step ``get_servers``
 
         Returns:
             list: all server ids
         """
-        server_ids = [s['id'] for s in self.get_servers(check=check)]
+        server_ids = [s['id']
+                      for s in self.get_servers(check=check, **options)]
         if check:
             assert_that(server_ids, is_not(empty()))
         return server_ids

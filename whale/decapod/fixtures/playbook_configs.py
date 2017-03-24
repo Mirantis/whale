@@ -60,7 +60,7 @@ def playbook_config_steps(get_playbook_config_steps, cleanup_playbook_configs):
     """
     _playbook_config_steps = get_playbook_config_steps()
     configs = _playbook_config_steps.get_playbook_configs(check=False)
-    configs_ids_before = {config['id'] for config in configs}
+    configs_ids_before = {conf['id'] for conf in configs}
 
     yield _playbook_config_steps
 
@@ -69,10 +69,14 @@ def playbook_config_steps(get_playbook_config_steps, cleanup_playbook_configs):
 
 
 @pytest.fixture
-def playbook_config_deploy(cluster, server_steps, playbook_config_steps):
+def playbook_config_deploy(request,
+                           cluster,
+                           server_steps,
+                           playbook_config_steps):
     """Function fixture to create playbook config before test.
 
     Args:
+        request (obj): pytest SubRequest instance
         cluster (dict): model of cluster
         server_steps (fixture): fixture to get servers ids
         playbook_config_steps (obj): instantiated playbook config steps
@@ -80,12 +84,18 @@ def playbook_config_deploy(cluster, server_steps, playbook_config_steps):
     Returns:
         dict: model of new playbook configuration
     """
+    options = {}
+    include_hint_ids = getattr(request, 'param', [])
+    if include_hint_ids:
+        options['include_hint_ids'] = include_hint_ids
+
     playbook_id = config.PLAYBOOK_DEPLOY_CLUSTER
-    server_ids = server_steps.get_server_ids()
+    server_ids = server_steps.get_server_ids()[0:config.DEPLOY_SERVERS_COUNT]
     return playbook_config_steps.create_playbook_config(
         cluster_id=cluster['id'],
         playbook_id=playbook_id,
-        server_ids=server_ids)
+        server_ids=server_ids,
+        **options)
 
 
 @pytest.fixture(scope='session')

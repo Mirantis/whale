@@ -33,15 +33,18 @@ class PlaybookConfigSteps(base.BaseSteps):
     """Playbook Configuration steps."""
 
     @steps_checker.step
-    def create_playbook_config(self, cluster_id, playbook_id, server_ids,
-                               name=None, check=True, **kwargs):
+    def create_playbook_config(self, cluster_id, playbook_id, server_ids=None,
+                               name=None, include_hint_ids=None,
+                               exclude_hint_ids=None, check=True, **kwargs):
         """Step to create new playbook configuration model.
 
         Args:
             cluster_id (str): id of cluster
             playbook_id (str): id of playbook to use
-            server_ids (list): list of all servers ids
+            server_ids (list|None): list of all servers ids
             name (str|None): the name of the playbook config
+            include_hint_ids (list|None): list of included hint IDs
+            exclude_hint_ids (list|None): list of excluded hint IDs
             check (bool): flag whether to check step or not
              **kwargs: any suitable keyword arguments
 
@@ -51,7 +54,14 @@ class PlaybookConfigSteps(base.BaseSteps):
         Raises:
             TimeoutExpired|AssertionError: if check was triggered to an error
         """
+        server_ids = server_ids or []
         name = name or next(utils.generate_ids())
+
+        hints = ([{'id': h, 'value': True} for h in include_hint_ids or []] +
+                 [{'id': h, 'value': False} for h in exclude_hint_ids or []])
+        if hints:
+            kwargs['hints'] = kwargs.setdefault('hints', []) + hints
+
         playbook_config = self._client.create_playbook_configuration(
             name, cluster_id, playbook_id, server_ids, **kwargs)
         if check:

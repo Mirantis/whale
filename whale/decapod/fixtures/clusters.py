@@ -106,7 +106,7 @@ def delete_cluster(get_cluster_steps,
                 execution_steps.create_execution(osd_config['id'])
 
             cluster_config = playbook_config_steps.create_playbook_config(
-                cluster['id'], config.PLAYBOOK_PURGE_CLUSTER, server_ids=[])
+                cluster['id'], config.PLAYBOOK_PURGE_CLUSTER)
             execution_steps.create_execution(cluster_config['id'])
         else:
             # cluster doesn't have servers

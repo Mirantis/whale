@@ -23,6 +23,10 @@ import os
 # DECAPOD_URL absence doesn't raise exception here, because for docs generation
 # and unittests launching this variable doesn't need.
 
+# By default test environment includes 5 servers min. And 3 servers are enough
+# to deploy CEPH cluster. Other servers may be used for additional services.
+DEPLOY_SERVERS_COUNT = int(os.environ.get('DEPLOY_SERVERS_COUNT', 3))
+
 # Credentials
 DECAPOD_URL = os.environ.get('DECAPOD_URL')
 DECAPOD_WD_URL = 'http://{}'.format(DECAPOD_URL)
@@ -41,6 +45,15 @@ PLAYBOOK_TELEGRAF_REMOVAL = 'purge_telegraf'
 PLAYBOOK_CINDER_INTEGRATON = 'cinder_integration'
 PLAYBOOK_UPGRADE_CEPH = 'upgrade_ceph'
 PLAYBOOK_VERSION = 1
+
+# Hint IDs
+CINDER_CEPH_BACKEND = 'cinder'
+GLANCE_CEPH_BACKEND = 'glance'
+NOVA_CEPH_BACKEND = 'nova'
+OSD_COLLOCATED_JOURNALS = 'collocation'
+OSD_DMCRYPT = 'dmcrypt'
+MONITORS_TO_DEPLOY = 'mon_count'
+CEPH_REST_API = 'rest_api'
 
 # Executions
 EXECUTION_COMPLETED_STATUS = 'completed'
