@@ -24,8 +24,8 @@ from whale.decapod import steps
 __all__ = [
     'get_role_steps',
     'role_steps',
-    'create_role',
     'role',
+    'cleanup_roles',
 ]
 
 
@@ -34,10 +34,10 @@ def get_role_steps(get_decapod_client):
     """Callable session fixture to get role steps.
 
     Args:
-        get_decapod_client (function): function to get decapod client.
+        get_decapod_client (function): function to get decapod client
 
     Returns:
-        function: function to get role steps.
+        function: function to get role steps
     """
     def _get_role_steps():
         return steps.RoleSteps(get_decapod_client())
@@ -46,53 +46,45 @@ def get_role_steps(get_decapod_client):
 
 
 @pytest.fixture
-def role_steps(get_role_steps):
+def role_steps(get_role_steps, cleanup_roles):
     """Function fixture to get role steps.
 
     Args:
         get_role_steps (function): function to get role steps
+        cleanup_roles (function): function to cleanup roles after test
 
     Returns:
-        RoleSteps: instantiated role steps.
+        RoleSteps: instantiated role steps
     """
-    return get_role_steps()
+    _role_steps = get_role_steps()
+    roles = _role_steps.get_roles(check=False)
+    roles_ids_before = {role['id'] for role in roles}
+
+    yield _role_steps
+
+    cleanup_roles(_role_steps, uncleanable_ids=roles_ids_before)
 
 
 @pytest.fixture
-def create_role(role_steps):
-    """Callable fixture to create role with options.
-
-    Can be called several times during a test.
-    After the test it destroys all created roles.
-
-    Args:
-        role_steps (object): instantiated role steps
-
-    Yields:
-        function: function to create user with options
-    """
-    roles = []
-
-    def _create_role(*args, **kwargs):
-        role = role_steps.create_role(*args, **kwargs)
-        roles.append(role)
-        return role
-
-    yield _create_role
-
-    for role in roles:
-        role_steps.delete_role(role['id'])
-
-
-@pytest.fixture
-def role(create_role):
+def role(role_steps):
     """Fixture to create role with default options before test.
 
     Args:
-        create_role (function): function to create role with options
+        role_steps (obj): instantiated role steps
 
     Returns:
         dict: model of the role
-
     """
-    return create_role()
+    return role_steps.create_role()
+
+
+@pytest.fixture(scope='session')
+def cleanup_roles():
+    """"Callable session fixture to cleanup roles."""
+    def _cleanup_roles(_roles_steps, uncleanable_ids=None):
+        uncleanable_ids = uncleanable_ids or []
+        for role in _roles_steps.get_roles(check=False):
+            if role['id'] not in uncleanable_ids:
+                _roles_steps.delete_role(role['id'])
+
+    return _cleanup_roles

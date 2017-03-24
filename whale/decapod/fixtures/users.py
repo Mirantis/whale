@@ -18,14 +18,12 @@ User fixtures
 # limitations under the License.
 
 import pytest
-from stepler.third_party import utils
 
 from whale.decapod import steps
 
 __all__ = [
     'get_user_steps',
     'user_steps',
-    'create_user',
     'user',
     'cleanup_users',
 ]
@@ -68,47 +66,17 @@ def user_steps(get_user_steps, cleanup_users):
 
 
 @pytest.fixture
-def create_user(user_steps):
-    """Callable fixture to create user with options.
-
-    Can be called several times during a test.
-    After the test it destroys all created users.
-
-    Args:
-        user_steps (object): instantiated user steps
-
-    Yields:
-        function: function to create user with options
-    """
-    users = []
-
-    def _create_user(*args, **kwargs):
-        user = user_steps.create_user(*args, **kwargs)
-        users.append(user)
-        return user
-
-    yield _create_user
-
-    for user in users:
-        user_steps.delete_user(user['id'])
-
-
-@pytest.fixture
-def user(role, create_user):
+def user(role, user_steps):
     """Function fixture to create user with default options before test.
 
     Args:
         role (dict): model of the role
-        create_user (function): function to create user with options
+        user_steps (obj): instantiated user steps
 
     Returns:
         dict: model of new user
     """
-    user_login = next(utils.generate_ids('user'))
-    return create_user(user_login=user_login,
-                       user_email=user_login + '@example.com',
-                       user_full_name=next(utils.generate_ids('full_name')),
-                       role_id=role['id'])
+    return user_steps.create_user(role_id=role['id'])
 
 
 @pytest.fixture(scope='session')
