@@ -22,8 +22,6 @@ from .clusters import PageClusters
 from .configurations import PageConfigurations
 from .executions import PageExecutions
 from .login import PageLogin
-from .playbooks import PagePlaybooks
-from .servers import PageServers
 from .user_management.roles import PageRoles
 from .user_management.users import PageUsers
 
@@ -34,8 +32,6 @@ pages = [
     PageConfigurations,
     PageExecutions,
     PageLogin,
-    PagePlaybooks,
     PageRoles,
-    PageServers,
     PageUsers,
 ]

@@ -24,5 +24,4 @@ class PageExecutions(base.PageBase):
     """Page to management executions."""
 
     url = "/executions"
-
     page_header_value = "Executions"

@@ -29,30 +29,35 @@ class Form(ui.Form):
 
     timeout = config.ACTION_TIMEOUT
 
-    submit_locator = By.CSS_SELECTOR, '.btn.btn-primary'
-    cancel_locator = By.CSS_SELECTOR, '.btn.cancel'
+    submit_locator = By.CSS_SELECTOR, 'button#save'
+    cancel_locator = By.CSS_SELECTOR, 'button#close'
 
-    @pom.timeit
-    @ui.wait_for_presence
-    def submit(self, modal_absent=True, modal_timeout=None):
-        """Submit form."""
-        submit_button = ui.Button(*self.submit_locator)
-        submit_button.container = self
-        submit_button.click()
+    def _click_button_by_locator(self,
+                                 locator,
+                                 modal_absent=True,
+                                 modal_timeout=None):
+        """Find button by locator and click it."""
+        button = ui.Button(*locator)
+        button.container = self
+        button.click()
 
         if modal_absent:
             self._modal.wait_for_absence(timeout=modal_timeout)
 
     @pom.timeit
     @ui.wait_for_presence
+    def submit(self, modal_absent=True, modal_timeout=None):
+        """Submit form."""
+        self._click_button_by_locator(self.submit_locator,
+                                      modal_absent,
+                                      modal_timeout)
+
+    @pom.timeit
+    @ui.wait_for_presence
     def cancel(self, modal_absent=True):
         """Cancel form."""
-        cancel_button = ui.Button(*self.cancel_locator)
-        cancel_button.container = self
-        cancel_button.click()
-
-        if modal_absent:
-            self._modal.wait_for_absence()
+        self._click_button_by_locator(self.cancel_locator,
+                                      modal_absent)
 
     @property
     @pom.cache
@@ -64,3 +69,24 @@ class Form(ui.Form):
                 return ui
             else:
                 container = container.container
+
+
+class FormNext(Form):
+    """Form with next button."""
+
+    next_locator = By.CSS_SELECTOR, 'button#next'
+
+    @pom.timeit
+    @ui.wait_for_presence
+    def next(self, modal_absent=True, modal_timeout=None):
+        """Go to the next form."""
+        self._click_button_by_locator(self.next_locator,
+                                      modal_absent,
+                                      modal_timeout)
+
+
+class FormConfirm(Form):
+    """Form to confirm action."""
+
+    submit_locator = By.CSS_SELECTOR, 'button.btn.btn-primary'
+    cancel_locator = By.CSS_SELECTOR, 'button.btn.btn-default'

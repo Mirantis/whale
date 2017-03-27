@@ -18,6 +18,6 @@ Custom UI components
 # limitations under the License.
 
 from .combobox import ComboBox  # noqa
-from .form import Form  # noqa
+from .form import Form, FormConfirm, FormNext  # noqa
 from .initiated_ui import InitiatedUI  # noqa
 from .navigate_menu import NavigateMenu  # noqa

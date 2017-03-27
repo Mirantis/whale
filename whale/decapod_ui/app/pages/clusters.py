@@ -43,9 +43,6 @@ class ListClusters(ui.List):
 class FormCreateCluster(_ui.Form):
     """Form to create cluster."""
 
-    submit_locator = By.CSS_SELECTOR, 'button#save'
-    cancel_locator = By.CSS_SELECTOR, 'button#close'
-
 
 @ui.register_ui(
     button_create_cluster=ui.Button(
@@ -57,5 +54,4 @@ class PageClusters(base.PageBase):
     """Page to management clusters."""
 
     url = "/clusters"
-
     page_header_value = "Cluster"

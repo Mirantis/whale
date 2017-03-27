@@ -29,6 +29,9 @@ from whale.decapod_ui.app import ui as _ui
 class FormLogin(_ui.Form):
     """Form to login user."""
 
+    submit_locator = By.CSS_SELECTOR, '.btn.btn-primary'
+    cancel_locator = By.CSS_SELECTOR, '.btn.cancel'
+
 
 @ui.register_ui(
     form_login=FormLogin(By.CSS_SELECTOR, 'form'),
