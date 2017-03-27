@@ -44,12 +44,11 @@ __all__ = sorted([  # sort for documentation
 
     'get_role_steps',
     'role_steps',
-    'create_role',
     'role',
+    'cleanup_roles',
 
     'get_user_steps',
     'user_steps',
-    'create_user',
     'user',
     'cleanup_users',
 
