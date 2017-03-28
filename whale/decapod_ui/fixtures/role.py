@@ -1,7 +1,7 @@
 """
-----------------
-Horizon fixtures
-----------------
+-------------
+Role fixtures
+-------------
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,23 +17,24 @@ Horizon fixtures
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .app import *  # noqa
-from .clusters import *  # noqa
-from .configuration import *  # noqa
-from .role import *  # noqa
-from .user import *  # noqa
+import pytest
 
-__all__ = sorted([  # sort for documentation
-    'auth_steps',
-    'decapod',
-    'login',
+from whale.decapod_ui.steps import role
 
-    'video_capture',
-    'virtual_display',
-    'report_dir',
-
-    'ui_cluster_steps',
-    'ui_configuration_steps',
+__all__ = [
     'ui_role_steps',
-    'ui_user_steps',
-])
+]
+
+
+@pytest.fixture
+def ui_role_steps(decapod, login):
+    """Function fixture to get role steps.
+
+    Args:
+        login (None): should log in decapod before steps using
+        decapod (Decapod): instantiated decapod web application
+
+    Returns:
+        RoleSteps: Instantiated role steps
+    """
+    return role.RoleSteps(decapod)

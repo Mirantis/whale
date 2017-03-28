@@ -149,6 +149,23 @@ class RoleSteps(base.BaseSteps):
         return roles
 
     @steps_checker.step
+    def get_role_by_name(self, role_name, check=True):
+        """Step to retrieve role by name.
+
+        Args:
+            role_name (str): role name
+            check (bool): flag whether to check step or not
+
+        Returns:
+            dict: model of role
+
+        Raises:
+            AssertionError: if check failed
+        """
+        return self.get_resource_by_field(role_name, self.get_roles,
+                                          field_name='name', check=check)
+
+    @steps_checker.step
     def get_permissions(self, check=True, **kwargs):
         """Step to retrieve permissions.
 
