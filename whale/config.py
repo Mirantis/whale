@@ -52,7 +52,7 @@ GLANCE_CEPH_BACKEND = 'glance'
 NOVA_CEPH_BACKEND = 'nova'
 OSD_COLLOCATED_JOURNALS = 'collocation'
 OSD_DMCRYPT = 'dmcrypt'
-MONITORS_TO_DEPLOY = 'mon_count'
+MONITORS_COUNT = 'mon_count'
 CEPH_REST_API = 'rest_api'
 
 # Executions

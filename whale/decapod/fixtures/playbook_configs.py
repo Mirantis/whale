@@ -85,9 +85,9 @@ def playbook_config_deploy(request,
         dict: model of new playbook configuration
     """
     options = {}
-    include_hint_ids = getattr(request, 'param', [])
-    if include_hint_ids:
-        options['include_hint_ids'] = include_hint_ids
+    hints = getattr(request, 'param', [])
+    if hints:
+        options['hints'] = hints
 
     playbook_id = config.PLAYBOOK_DEPLOY_CLUSTER
     server_ids = server_steps.get_server_ids()[0:config.DEPLOY_SERVERS_COUNT]

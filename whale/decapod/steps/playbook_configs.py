@@ -34,8 +34,7 @@ class PlaybookConfigSteps(base.BaseSteps):
 
     @steps_checker.step
     def create_playbook_config(self, cluster_id, playbook_id, server_ids=None,
-                               name=None, include_hint_ids=None,
-                               exclude_hint_ids=None, check=True, **kwargs):
+                               name=None, hints=None, check=True, **kwargs):
         """Step to create new playbook configuration model.
 
         Args:
@@ -43,8 +42,7 @@ class PlaybookConfigSteps(base.BaseSteps):
             playbook_id (str): id of playbook to use
             server_ids (list|None): list of all servers ids
             name (str|None): the name of the playbook config
-            include_hint_ids (list|None): list of included hint IDs
-            exclude_hint_ids (list|None): list of excluded hint IDs
+            hints (dict|None): dict of included or excluded hint IDs
             check (bool): flag whether to check step or not
              **kwargs: any suitable keyword arguments
 
@@ -56,14 +54,11 @@ class PlaybookConfigSteps(base.BaseSteps):
         """
         server_ids = server_ids or []
         name = name or next(utils.generate_ids())
-
-        hints = ([{'id': h, 'value': True} for h in include_hint_ids or []] +
-                 [{'id': h, 'value': False} for h in exclude_hint_ids or []])
-        if hints:
-            kwargs['hints'] = kwargs.setdefault('hints', []) + hints
+        hints = [{'id': h, 'value': v} for h, v in (hints or {}).items()]
 
         playbook_config = self._client.create_playbook_configuration(
-            name, cluster_id, playbook_id, server_ids, **kwargs)
+            name, cluster_id, playbook_id, server_ids, hints=hints, **kwargs)
+
         if check:
             self.check_resource_presence(
                 playbook_config['id'], self._client.get_playbook_configuration)
@@ -72,6 +67,7 @@ class PlaybookConfigSteps(base.BaseSteps):
                         equal_to(cluster_id))
             assert_that(playbook_config['data']['playbook_id'],
                         equal_to(playbook_id))
+
         return playbook_config
 
     @steps_checker.step
@@ -93,10 +89,14 @@ class PlaybookConfigSteps(base.BaseSteps):
         """
         if not isinstance(playbook_config, dict):
             playbook_config = self.get_playbook_config(playbook_config)
+
         playbook_config['data'].update(new_data)
+
         self._client.update_playbook_configuration(playbook_config, **kwargs)
+
         if check:
             assert_that(playbook_config['data'], has_entries(new_data))
+
         return playbook_config
 
     @steps_checker.step
@@ -115,8 +115,10 @@ class PlaybookConfigSteps(base.BaseSteps):
         """
         playbook_configurations = self._client.get_playbook_configurations(
             **kwargs)['items']
+
         if check:
             assert_that(playbook_configurations, is_not(empty()))
+
         return playbook_configurations
 
     @steps_checker.step
@@ -136,9 +138,11 @@ class PlaybookConfigSteps(base.BaseSteps):
         """
         playbook_configuration = self._client.get_playbook_configuration(
             playbook_config_id, **kwargs)
+
         if check:
             assert_that(playbook_configuration['id'], equal_to(
                 playbook_config_id))
+
         return playbook_configuration
 
     @steps_checker.step
@@ -155,7 +159,8 @@ class PlaybookConfigSteps(base.BaseSteps):
         """
         playbook_config = self._client.delete_playbook_configuration(
             playbook_config_id, **kwargs)
+
         if check:
             self.check_resource_presence(
-                playbook_config['id'],
-                self._client.get_playbook_configuration, must_present=False)
+                playbook_config['id'], self._client.get_playbook_configuration,
+                must_present=False)
