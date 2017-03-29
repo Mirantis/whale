@@ -111,10 +111,10 @@ def test_deploy_cluster_add_osd_monitor_telegraf(deploy_cluster,
 @pytest.mark.parametrize('playbook_config_deploy',
                          [{config.OSD_COLLOCATED_JOURNALS: True,
                            config.CEPH_REST_API: True}], indirect=True)
-def test_deploy_cluster_with_cinder_integration(deploy_cluster,
-                                                playbook_config_steps,
-                                                execution_steps):
-    """**Scenario:** Deploy Ceph cluster with Cinder integration.
+def test_deploy_cluster_integrate_cinder_upgrade_ceph(deploy_cluster,
+                                                      playbook_config_steps,
+                                                      execution_steps):
+    """**Scenario:** Deploy Ceph cluster with Cinder integration, upgrade Ceph.
 
     **Setup:**
 
@@ -122,9 +122,12 @@ def test_deploy_cluster_with_cinder_integration(deploy_cluster,
 
     **Steps:**
 
-    #. Create new configuration, using the cluster and
-       "Cinder Integration" playbook with "Cinder with Ceph backend",
-       "Glance with Ceph backend" and "Nova with Ceph backend"
+    #. Create new configuration, using the cluster and "Cinder Integration"
+       playbook with "Cinder with Ceph backend", "Glance with Ceph backend"
+       and "Nova with Ceph backend"
+    #. Execute created configuration
+    #. Create new configuration, using the cluster and "Upgrade Ceph" playbook
+       with force time sync on Ceph nodes
     #. Execute created configuration
 
     **Teardown:**
@@ -137,5 +140,12 @@ def test_deploy_cluster_with_cinder_integration(deploy_cluster,
         hints={config.CINDER_CEPH_BACKEND: True,
                config.GLANCE_CEPH_BACKEND: True,
                config.NOVA_CEPH_BACKEND: True})
+
+    execution_steps.create_execution(playbook_config['id'])
+
+    playbook_config = playbook_config_steps.create_playbook_config(
+        cluster_id=deploy_cluster['id'],
+        playbook_id=config.PLAYBOOK_UPGRADE_CEPH,
+        hints={config.FORCE_TIME_SYNC: True})
 
     execution_steps.create_execution(playbook_config['id'])
