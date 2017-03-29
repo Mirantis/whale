@@ -109,13 +109,11 @@ def test_deploy_cluster_add_osd_monitor_telegraf(deploy_cluster,
 
 @pytest.mark.idempotent_id('d8f0b507-2185-4800-b431-f196be1c17b3')
 @pytest.mark.parametrize('playbook_config_deploy',
-                         [[config.OSD_COLLOCATED_JOURNALS,
-                           config.CEPH_REST_API]], indirect=True)
-def test_deploy_ceph_cluster_with_cinder_integration(playbook_config_deploy,
-                                                     deploy_cluster,
-                                                     server_steps,
-                                                     playbook_config_steps,
-                                                     execution_steps):
+                         [{config.OSD_COLLOCATED_JOURNALS: True,
+                           config.CEPH_REST_API: True}], indirect=True)
+def test_deploy_cluster_with_cinder_integration(deploy_cluster,
+                                                playbook_config_steps,
+                                                execution_steps):
     """**Scenario:** Deploy Ceph cluster with Cinder integration.
 
     **Setup:**
@@ -136,8 +134,8 @@ def test_deploy_ceph_cluster_with_cinder_integration(playbook_config_deploy,
     playbook_config = playbook_config_steps.create_playbook_config(
         cluster_id=deploy_cluster['id'],
         playbook_id=config.PLAYBOOK_CINDER_INTEGRATON,
-        include_hint_ids=[config.CINDER_CEPH_BACKEND,
-                          config.GLANCE_CEPH_BACKEND,
-                          config.NOVA_CEPH_BACKEND])
+        hints={config.CINDER_CEPH_BACKEND: True,
+               config.GLANCE_CEPH_BACKEND: True,
+               config.NOVA_CEPH_BACKEND: True})
 
     execution_steps.create_execution(playbook_config['id'])
