@@ -50,11 +50,8 @@ class ListConfigurations(ui.List):
 @ui.register_ui(
     field_name=ui.TextField(By.ID, 'configuration_name'),
     combobox_cluster=_ui.ComboBox(By.ID, 'configuration_cluster'))
-class FormCreateConfiguration(_ui.Form):
+class FormCreateConfiguration(_ui.FormNext):
     """Form to create configuration."""
-
-    submit_locator = By.CSS_SELECTOR, 'button#next'
-    cancel_locator = By.CSS_SELECTOR, 'button#close'
 
 
 @ui.register_ui(
@@ -72,20 +69,14 @@ class ListPlaybooks(ui.List):
 
 @ui.register_ui(
     radiobutton_playbooks=ListPlaybooks(By.CSS_SELECTOR, 'div.col-xs-12.grid'))
-class FormPlaybookConfiguration(_ui.Form):
+class FormPlaybookConfiguration(_ui.FormNext):
     """Form to choose playbook for configuration."""
-
-    submit_locator = By.CSS_SELECTOR, 'button#next'
-    cancel_locator = By.CSS_SELECTOR, 'button#close'
 
 
 @ui.register_ui(
     field_monitors_count=ui.TextField(By.XPATH, './/input[@id="mon_count"]'))
-class FormPlaybookParameters(_ui.Form):
+class FormPlaybookParameters(_ui.FormNext):
     """Form to choose playbook parameters."""
-
-    submit_locator = By.CSS_SELECTOR, 'button#next'
-    cancel_locator = By.CSS_SELECTOR, 'button#close'
 
 
 @ui.register_ui(
@@ -106,24 +97,11 @@ class ListServers(ui.List):
 class FormPlaybookServers(_ui.Form):
     """Form to choose servers for playbook."""
 
-    submit_locator = By.CSS_SELECTOR, 'button#save'
-    cancel_locator = By.CSS_SELECTOR, 'button#close'
-
 
 @ui.register_ui(
     field_playbook_config=ui.TextField(By.NAME, 'configuration'))
 class FormUpdateConfiguration(_ui.Form):
     """Form to update configuration."""
-
-    submit_locator = By.CSS_SELECTOR, 'button#save'
-    cancel_locator = By.CSS_SELECTOR, 'button#close'
-
-
-class FormConfirmConfigDeletion(_ui.Form):
-    """Form to confirm configuration deleteion."""
-
-    submit_locator = By.CSS_SELECTOR, 'button.btn.btn-primary'
-    cancel_locator = By.CSS_SELECTOR, 'button.btn.btn-default'
 
 
 @ui.register_ui(
@@ -142,12 +120,11 @@ class FormConfirmConfigDeletion(_ui.Form):
     list_configurations=ListConfigurations(
         By.XPATH, './/div[@class="configurations row" or '
                   '@class="no-configurations"]'),
-    form_confirm_config_deletion=FormConfirmConfigDeletion(
+    form_confirm_config_deletion=_ui.FormConfirm(
         By.XPATH, './/div[@class="modal-content" and '
                   'contains(.//*, "Delete configuration")]'))
 class PageConfigurations(base.PageBase):
     """Page to management configurations."""
 
     url = "/configurations"
-
     page_header_value = "Configurations"

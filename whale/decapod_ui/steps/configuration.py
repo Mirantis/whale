@@ -66,14 +66,14 @@ class ConfigurationSteps(base.BaseSteps):
 
         page.form_create_configuration.field_name.value = name
         page.form_create_configuration.combobox_cluster.value = cluster_name
-        page.form_create_configuration.submit(modal_absent=False)
+        page.form_create_configuration.next(modal_absent=False)
 
         page.form_playbook_configuration.radiobutton_playbooks.row(
             playbook_name).radiobutton.click()
-        page.form_playbook_configuration.submit(modal_absent=False)
+        page.form_playbook_configuration.next(modal_absent=False)
 
         page.form_playbook_parameters.field_monitors_count.value = len(servers)
-        page.form_playbook_parameters.submit(modal_absent=False)
+        page.form_playbook_parameters.next(modal_absent=False)
 
         for server in servers:
             page.form_playbook_servers.checkbox_servers.row(

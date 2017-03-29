@@ -39,7 +39,7 @@ class UserSteps(base.BaseSteps):
         Args:
             role_name (str): role name of user
             login (str, optional): login of user
-            name (str, optional): full name of user
+            full_name (str, optional): full name of user
             check (bool, optional): flag whether to check step or not
 
         Returns:
