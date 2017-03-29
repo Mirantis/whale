@@ -21,3 +21,7 @@ Includes fixtures available in global scope among all tests.
 
 from whale.decapod.conftest import *  # noqa
 from whale.decapod.conftest import __all__  # noqa
+
+pytest_plugins = [
+    'stepler.third_party.idempotent_id',
+]
