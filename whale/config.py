@@ -54,6 +54,7 @@ OSD_COLLOCATED_JOURNALS = 'collocation'
 OSD_DMCRYPT = 'dmcrypt'
 MONITORS_COUNT = 'mon_count'
 CEPH_REST_API = 'rest_api'
+FORCE_TIME_SYNC = 'sync_time'
 
 # Executions
 EXECUTION_COMPLETED_STATUS = 'completed'
