@@ -22,6 +22,28 @@ from pom.ui import table as ui_table
 from selenium.webdriver.common.by import By
 
 
+def _merge_xpath(xpath, attr):
+    if xpath.endswith(']'):
+        return xpath[:-1] + ' and {}]'.format(attr)
+    else:
+        return xpath + '[{}]'.format(attr)
+
+
+class ListField(ui.List):
+    """Custom row class to get row by field value"""
+
+    def row(self, *args):
+        """Get row of table by field name and value."""
+
+        xpath = self.row_xpath
+        for name, value in args:
+            xpath = _merge_xpath(xpath, '@{0}="{1}"'.format(name, value))
+
+        row = self.row_cls(By.XPATH, xpath)
+        row.container = self
+        return row
+
+
 class _CellIndexMixin(ui_table._CellsMixin):
     """Cell mixin to add index to columns dict if it doesn't exist."""
 
@@ -34,16 +56,20 @@ class _CellIndexMixin(ui_table._CellsMixin):
 
         element = ui.Block(By.XPATH, self.element_xpath.format(name))
         element.container = self
-        element.wait_for_presence()
 
-        return elements.index(element.webelement) + 1
+        if element.webelement in elements:
+            result = elements.index(element.webelement) + 1
+        else:
+            result = -1
+
+        return result
 
     def cell(self, name):
         """Get cell by name."""
         self.container.columns = self.container.columns or {}
-        if name not in self.container.columns:
-            index = self.get_index(name)
-            self.container.columns[name] = index
+
+        index = self.get_index(name)
+        self.container.columns[name] = index
 
         return super(_CellIndexMixin, self).cell(name)
 

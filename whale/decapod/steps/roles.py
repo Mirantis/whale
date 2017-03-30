@@ -18,11 +18,13 @@ Role steps
 # limitations under the License.
 
 from hamcrest import (assert_that, empty, equal_to, has_entries,
-                      is_not)  # noqa H301
+                      is_in, is_not)  # noqa H301
 from stepler.third_party import steps_checker
 from stepler.third_party import utils
+from stepler.third_party import waiter
 
 from whale import base
+from whale import config
 
 __all__ = [
     'RoleSteps'
@@ -164,6 +166,70 @@ class RoleSteps(base.BaseSteps):
         """
         return self.get_resource_by_field(role_name, self.get_roles,
                                           field_name='name', check=check)
+
+    @steps_checker.step
+    def get_role_permissions_by_group(self, role_id, group_name, check=True):
+        """Step to retrieve permissions from permissions group for role.
+
+        Args:
+            role_id (str): role id
+            group_name (str): permissions group name
+            check (bool): flag whether to check step or not
+
+        Returns:
+            list: list of permissions for role
+
+        Raises:
+            AttributeError: if permissions group with group_name doesn't exist
+            AssertionError: if check failed
+        """
+        role = self.get_role(role_id)
+        for permissions_group in role['data']['permissions']:
+            if permissions_group["name"] == group_name:
+                group = permissions_group['permissions']
+                break
+        else:
+            raise AttributeError(
+                "Permissions group with name '{}' doesn't exist.".format(
+                    group_name))
+
+        if check:
+            assert_that(group, is_not(empty()))
+
+        return group
+
+    @steps_checker.step
+    def check_role_permission_presence(
+            self,
+            role_id,
+            permission,
+            group_name=config.PERMISSIONS_GROUP_API,
+            must_present=True,
+            timeout=0):
+        """Step to check that permission is present for role.
+
+        Args:
+            role_id (str): role id
+            permission (str): permission name
+            group_name (str): permissions group name
+            must_present (bool): flag whether permission should be
+                present or not
+            timeout (int): seconds to wait a result of check
+
+        Raises:
+            TimeoutExpired: if check failed after timeout
+        """
+        def _check_role_permission_presence():
+            permissions = self.get_role_permissions_by_group(
+                role_id, group_name)
+
+            matcher = is_in(permissions)
+            if not must_present:
+                matcher = is_not(matcher)
+
+            return waiter.expect_that(permission, matcher)
+
+        waiter.wait(_check_role_permission_presence, timeout_seconds=timeout)
 
     @steps_checker.step
     def get_permissions(self, check=True, **kwargs):

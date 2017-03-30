@@ -52,18 +52,10 @@ class FormCreateRole(_ui.FormNext):
     """Form to create role."""
 
 
-@ui.register_ui(
-    checkbox_permissions_group=ui.CheckBox(By.XPATH,
-                                           './/input[@type="checkbox"]'))
-class RowPermissionsGroup(ui.Row):
-    """Row of permissions group."""
-
-
-class ListPermissionsGroups(ui.List):
+class ListPermissionsGroups(_ui.ListField):
     """List of permissions groups."""
 
-    row_cls = RowPermissionsGroup
-    row_xpath = './/div[@class="checkbox"]'
+    row_xpath = './/input[@type="checkbox"]'
 
 
 @ui.register_ui(
