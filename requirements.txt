@@ -31,3 +31,4 @@ sphinx_rtd_theme==0.1.9
 
 # verification
 tox==2.4.1
+hacking!=0.13.0,<0.14,>=0.12.0
