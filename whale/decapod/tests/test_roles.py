@@ -22,7 +22,7 @@ from stepler.third_party import utils
 
 
 @pytest.mark.idempotent_id('338fa783-4c06-481c-a978-a7201f440946')
-def test_create_and_delete(role_steps):
+def test_create_and_delete_role(role_steps):
     """**Scenario:** Check creating and deleting of role.
 
     **Steps:**
