@@ -89,3 +89,18 @@ def test_update_role(role, role_steps, ui_role_steps):
             permission=permission,
             group_name=config.PERMISSIONS_GROUP_PLAYBOOK,
             must_present=False)
+
+
+@pytest.mark.idempotent_id('f1bc17dc-6bda-4ed6-8408-e2cb4af2cdca')
+def test_delete_role(role, ui_role_steps):
+    """**Scenario:** Role may be deleted in UI.
+
+    **Setup:**
+
+    #. Create role via API
+
+    **Steps:**
+
+    #. Delete role using API
+    """
+    ui_role_steps.delete_role(role['data']['name'])

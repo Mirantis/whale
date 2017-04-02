@@ -70,6 +70,9 @@ class FormRolePermissions(_ui.FormNext):
     form_create_role=FormCreateRole(By.CSS_SELECTOR, "div.modal-content"),
     form_role_permissions=FormRolePermissions(By.CSS_SELECTOR,
                                               "div.modal-content"),
+    form_confirm_role_deletion=_ui.FormConfirm(
+        By.XPATH,
+        './/div[@class="modal-content" and contains(.//*, "Delete role")]'),
     table_roles=RolesTable(By.CSS_SELECTOR, "div.roles.grid.row"))
 class PageRoles(base.PageBase):
     """Page to management roles."""

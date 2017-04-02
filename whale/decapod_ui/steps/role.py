@@ -111,3 +111,22 @@ class RoleSteps(base.BaseSteps):
                 new_role_name).wait_for_presence()
 
         return role_name
+
+    @steps_checker.step
+    def delete_role(self, role_name, check=True):
+        """Step to delete role.
+
+        Args:
+            role_name (str): role name
+            check (bool, optional): flag whether to check step or not
+
+        Raises:
+            Exception: if role is present on page
+        """
+        page_roles = self._page_roles()
+
+        page_roles.table_roles.header.cell(role_name).button_delete.click()
+        page_roles.form_confirm_role_deletion.submit(modal_absent=False)
+
+        if check:
+            page_roles.table_roles.header.cell(role_name).wait_for_absence()
