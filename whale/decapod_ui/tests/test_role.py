@@ -1,7 +1,7 @@
 """
-----------------
-Horizon fixtures
-----------------
+-------------
+Role UI tests
+-------------
 """
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,23 +17,21 @@ Horizon fixtures
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .app import *  # noqa
-from .clusters import *  # noqa
-from .configuration import *  # noqa
-from .role import *  # noqa
-from .user import *  # noqa
+import pytest
 
-__all__ = sorted([  # sort for documentation
-    'auth_steps',
-    'decapod',
-    'login',
 
-    'video_capture',
-    'virtual_display',
-    'report_dir',
+@pytest.mark.idempotent_id('458f3541-5b4f-42be-92d4-8cc6f8cc6aa6')
+def test_create_role(role_steps, ui_role_steps):
+    """**Scenario:** Role may be created in UI.
 
-    'ui_cluster_steps',
-    'ui_configuration_steps',
-    'ui_role_steps',
-    'ui_user_steps',
-])
+    **Steps:**
+
+    #. Create role via UI
+    #. Find role by name via API
+
+    **Teardown:**
+
+    #. Delete role using API
+    """
+    role_name = ui_role_steps.create_role()
+    role_steps.get_role_by_name(role_name)

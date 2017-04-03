@@ -21,3 +21,4 @@ from .combobox import ComboBox  # noqa
 from .form import Form, FormConfirm, FormNext  # noqa
 from .initiated_ui import InitiatedUI  # noqa
 from .navigate_menu import NavigateMenu  # noqa
+from .table import Header  # noqa

@@ -33,13 +33,22 @@ class Header(ui.Block):
 
 
 @ui.register_ui(
+    link_users=ui.Link(By.CSS_SELECTOR, 'a[href="/admin/users"]'),
+    link_roles=ui.Link(By.CSS_SELECTOR, 'a[href="/admin/roles"]'))
+class UserManagementHeader(ui.Block):
+    """User management header block."""
+
+
+@ui.register_ui(
     current_user=ui.Link(
         By.XPATH, '//div[@class="current-user"]/a[1]'),
     logout=ui.Link(
         By.XPATH, '//div[@class="current-user"]/a[2]'),
     navigate_menu=_ui.NavigateMenu(
         By.XPATH, './/ul[@class="col-xs-8 navigation"]/li'),
-    header=Header(By.CSS_SELECTOR, "div.header"))
+    header=Header(By.CSS_SELECTOR, "div.header"),
+    users_management_header=UserManagementHeader(
+        By.XPATH, './/div[@class="header" and .//a[@href="/admin/users"]]'))
 class PageBase(pom.Page):
     """Base page of user account."""
 
