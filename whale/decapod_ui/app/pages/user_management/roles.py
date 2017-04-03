@@ -52,18 +52,10 @@ class FormCreateRole(_ui.FormNext):
     """Form to create role."""
 
 
-@ui.register_ui(
-    checkbox_permissions_group=ui.CheckBox(By.XPATH,
-                                           './/input[@type="checkbox"]'))
-class RowPermissionsGroup(ui.Row):
-    """Row of permissions group."""
-
-
-class ListPermissionsGroups(ui.List):
+class ListPermissionsGroups(_ui.ListField):
     """List of permissions groups."""
 
-    row_cls = RowPermissionsGroup
-    row_xpath = './/div[@class="checkbox"]'
+    row_xpath = './/input[@type="checkbox"]'
 
 
 @ui.register_ui(
@@ -78,6 +70,9 @@ class FormRolePermissions(_ui.FormNext):
     form_create_role=FormCreateRole(By.CSS_SELECTOR, "div.modal-content"),
     form_role_permissions=FormRolePermissions(By.CSS_SELECTOR,
                                               "div.modal-content"),
+    form_confirm_role_deletion=_ui.FormConfirm(
+        By.XPATH,
+        './/div[@class="modal-content" and contains(.//*, "Delete role")]'),
     table_roles=RolesTable(By.CSS_SELECTOR, "div.roles.grid.row"))
 class PageRoles(base.PageBase):
     """Page to management roles."""
