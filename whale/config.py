@@ -44,6 +44,10 @@ PLAYBOOK_TELEGRAF_INTEGRATION = 'telegraf_integration'
 PLAYBOOK_TELEGRAF_REMOVAL = 'purge_telegraf'
 PLAYBOOK_CINDER_INTEGRATON = 'cinder_integration'
 PLAYBOOK_UPGRADE_CEPH = 'upgrade_ceph'
+PLAYBOOK_ADD_REST_API = 'add_restapi'
+PLAYBOOK_ADD_RADOS_GATEWAY = 'add_rgw'
+PLAYBOOK_REMOVE_REST_API = 'remove_restapi'
+PLAYBOOK_REMOVE_RADOS_GATEWAY = 'remove_rgw'
 PLAYBOOK_VERSION = 1
 
 # Hint IDs

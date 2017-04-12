@@ -59,10 +59,12 @@ def test_deploy_cluster_add_osd_monitor_telegraf(deploy_cluster,
 
     #. Delete cluster via "purge_cluster" playbook execution.
     """
-    all_server_ids = server_steps.get_server_ids()
+    cluster_server_ids = server_steps.get_server_ids(busy_only=True)
 
     osd_server_id, monitor_server_id = server_steps.get_server_ids(
         vacant_only=True)[:2]
+
+    all_server_ids = cluster_server_ids + [osd_server_id, monitor_server_id]
 
     playbook_config = playbook_config_steps.create_playbook_config(
         cluster_id=deploy_cluster['id'],
@@ -147,5 +149,71 @@ def test_deploy_cluster_integrate_cinder_upgrade_ceph(deploy_cluster,
         cluster_id=deploy_cluster['id'],
         playbook_id=config.PLAYBOOK_UPGRADE_CEPH,
         hints={config.FORCE_TIME_SYNC: True})
+
+    execution_steps.create_execution(playbook_config['id'])
+
+
+@pytest.mark.idempotent_id('e0141a14-aa50-45f3-b6b9-4fde17fccb9a')
+def test_deploy_cluster_add_rest_api_rados_gateway(deploy_cluster,
+                                                   server_steps,
+                                                   playbook_config_steps,
+                                                   execution_steps):
+    """**Scenario:** Deploy Ceph cluster, add REST API and Rados Gateway hosts.
+
+    **Setup:**
+
+    #. Deploy cluster
+
+    **Steps:**
+
+    #. Get all cluster servers
+    #. Create new configuration, using the cluster and "Add Ceph REST API host"
+       playbook, and 2 servers (one cluster server and one vacant server)
+    #. Execute created configuration
+    #. Create new configuration, using the cluster and "Add Rados Gateway to
+       the cluster" playbook, and 2 servers (one cluster server and one vacant
+       server)
+    #. Execute created configuration
+    #. Create new configuration, using the cluster and "Remove Rados Gateway
+       host from cluster" playbook, and Rados Gateway servers
+    #. Execute created configuration
+    #. Create new configuration, using the cluster and "Remove Ceph REST API
+       host" playbook, and REST API servers
+    #. Execute created configuration
+
+    **Teardown:**
+
+    #. Delete cluster via "purge_cluster" playbook execution.
+    """
+    cluster_server_ids = server_steps.get_server_ids(busy_only=True)
+
+    rest_api_server_id, rgw_server_id = server_steps.get_server_ids(
+        vacant_only=True)[:2]
+
+    playbook_config = playbook_config_steps.create_playbook_config(
+        cluster_id=deploy_cluster['id'],
+        playbook_id=config.PLAYBOOK_ADD_REST_API,
+        server_ids=[cluster_server_ids[0], rest_api_server_id])
+
+    execution_steps.create_execution(playbook_config['id'])
+
+    playbook_config = playbook_config_steps.create_playbook_config(
+        cluster_id=deploy_cluster['id'],
+        playbook_id=config.PLAYBOOK_ADD_RADOS_GATEWAY,
+        server_ids=[cluster_server_ids[1], rgw_server_id])
+
+    execution_steps.create_execution(playbook_config['id'])
+
+    playbook_config = playbook_config_steps.create_playbook_config(
+        cluster_id=deploy_cluster['id'],
+        playbook_id=config.PLAYBOOK_REMOVE_RADOS_GATEWAY,
+        server_ids=[cluster_server_ids[1], rgw_server_id])
+
+    execution_steps.create_execution(playbook_config['id'])
+
+    playbook_config = playbook_config_steps.create_playbook_config(
+        cluster_id=deploy_cluster['id'],
+        playbook_id=config.PLAYBOOK_REMOVE_REST_API,
+        server_ids=[cluster_server_ids[0], rest_api_server_id])
 
     execution_steps.create_execution(playbook_config['id'])
