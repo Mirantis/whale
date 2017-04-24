@@ -111,8 +111,7 @@ def test_deploy_cluster_add_osd_monitor_telegraf(deploy_cluster,
 
 @pytest.mark.idempotent_id('d8f0b507-2185-4800-b431-f196be1c17b3')
 @pytest.mark.parametrize('playbook_config_deploy',
-                         [{config.OSD_COLLOCATED_JOURNALS: True,
-                           config.CEPH_REST_API: True}], indirect=True)
+                         [{config.CEPH_REST_API: True}], indirect=True)
 def test_deploy_cluster_integrate_cinder_upgrade_ceph(deploy_cluster,
                                                       playbook_config_steps,
                                                       execution_steps):
