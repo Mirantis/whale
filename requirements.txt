@@ -1,7 +1,7 @@
 # general
 git+git://github.com/Mirantis/stepler.git
--e decapod/decapodlib
--e decapod/decapodcli
+#-e decapod/decapodlib
+#-e decapod/decapodcli
 
 # docs
 Sphinx==1.4.6
